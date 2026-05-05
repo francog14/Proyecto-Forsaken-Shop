@@ -21,7 +21,7 @@ public class CategoriaController {
     private CategoriaService categoriaService;
 
     @GetMapping("")
-    public List<Categoria> obtenerCategorias() {
+    public List<Categoria> obtenerTodasCategorias() {
         return categoriaService.obtenerTodasCategorias();
     }
     
