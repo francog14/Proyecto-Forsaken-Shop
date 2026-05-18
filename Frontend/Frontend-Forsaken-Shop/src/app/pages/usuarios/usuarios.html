@@ -1,0 +1,95 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Clientes</p>
+      <h1>Usuarios</h1>
+      <p class="lead">Registra compradores y asigna roles disponibles desde el backend.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="cargarDatos()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
+
+  <div class="content-grid">
+    <form class="panel form-grid" (ngSubmit)="guardar()">
+      <h2>{{ formulario.id_usuario ? 'Editar usuario' : 'Nuevo usuario' }}</h2>
+
+      <label>
+        RUN
+        <input name="run" type="text" placeholder="12345678-9" [(ngModel)]="formulario.run" required>
+      </label>
+
+      <label>
+        Nombre
+        <input name="nombre" type="text" [(ngModel)]="formulario.nombre" required>
+      </label>
+
+      <label>
+        Email
+        <input name="email" type="email" [(ngModel)]="formulario.email" required>
+      </label>
+
+      <label>
+        Rol
+        <select name="id_rol" [(ngModel)]="formulario.id_rol" required>
+          <option [ngValue]="0">Selecciona un rol</option>
+          @for (rol of roles(); track rol.id_rol) {
+            <option [ngValue]="rol.id_rol">{{ rol.nombre_rol }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <button class="primary-button" type="submit">{{ formulario.id_usuario ? 'Guardar cambios' : 'Crear usuario' }}</button>
+        <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
+      </div>
+    </form>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>Listado</h2>
+        <span>{{ usuarios().length }} registros</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Usuario</th>
+              <th>RUN</th>
+              <th>Rol</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (usuario of usuarios(); track usuario.id_usuario) {
+              <tr>
+                <td>{{ usuario.id_usuario }}</td>
+                <td>
+                  <strong>{{ usuario.nombre }}</strong>
+                  <span>{{ usuario.email }}</span>
+                </td>
+                <td>{{ usuario.run }}</td>
+                <td>{{ nombreRol(usuario.id_rol) }}</td>
+                <td class="row-actions">
+                  <button type="button" (click)="editar(usuario)">Editar</button>
+                  <button type="button" class="danger" (click)="eliminar(usuario.id_usuario)">Eliminar</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="5" class="empty-state">No hay usuarios registrados.</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</section>

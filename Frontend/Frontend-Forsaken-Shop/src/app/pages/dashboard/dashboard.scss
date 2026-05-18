@@ -1,0 +1,22 @@
+.stat-card {
+  min-height: 132px;
+}
+
+.metric-list {
+  display: grid;
+  gap: 14px;
+  margin-top: 18px;
+}
+
+.metric-list div {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  justify-content: space-between;
+  padding-bottom: 14px;
+}
+
+.metric-list div:last-child {
+  border-bottom: 0;
+  padding-bottom: 0;
+}

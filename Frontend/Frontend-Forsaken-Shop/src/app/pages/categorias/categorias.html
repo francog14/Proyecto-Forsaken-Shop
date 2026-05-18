@@ -1,0 +1,71 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Configuracion</p>
+      <h1>Categorias y roles</h1>
+      <p class="lead">Mantiene las clasificaciones de prendas y perfiles de usuario.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="cargarDatos()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
+
+  <div class="split-grid">
+    <section class="panel">
+      <h2>Categorias</h2>
+      <form class="inline-form" (ngSubmit)="guardarCategoria()">
+        <input name="nombre_categoria" type="text" placeholder="Nombre de categoria" [(ngModel)]="categoria.nombre_categoria" required>
+        <button class="primary-button" type="submit">{{ categoria.id_categoria ? 'Guardar' : 'Crear' }}</button>
+        <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
+      </form>
+
+      <div class="simple-list">
+        @for (item of categorias(); track item.id_categoria) {
+          <article>
+            <div>
+              <strong>{{ item.nombre_categoria }}</strong>
+              <span>ID {{ item.id_categoria }}</span>
+            </div>
+            <div class="row-actions">
+              <button type="button" (click)="editarCategoria(item)">Editar</button>
+              <button type="button" class="danger" (click)="eliminarCategoria(item.id_categoria)">Eliminar</button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty-state">No hay categorias registradas.</p>
+        }
+      </div>
+    </section>
+
+    <section class="panel">
+      <h2>Roles</h2>
+      <form class="inline-form" (ngSubmit)="guardarRol()">
+        <input name="nombre_rol" type="text" placeholder="Nombre de rol" [(ngModel)]="rol.nombre_rol" required>
+        <button class="primary-button" type="submit">{{ rol.id_rol ? 'Guardar' : 'Crear' }}</button>
+        <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
+      </form>
+
+      <div class="simple-list">
+        @for (item of roles(); track item.id_rol) {
+          <article>
+            <div>
+              <strong>{{ item.nombre_rol }}</strong>
+              <span>ID {{ item.id_rol }}</span>
+            </div>
+            <div class="row-actions">
+              <button type="button" (click)="editarRol(item)">Editar</button>
+              <button type="button" class="danger" (click)="eliminarRol(item.id_rol)">Eliminar</button>
+            </div>
+          </article>
+        } @empty {
+          <p class="empty-state">No hay roles registrados.</p>
+        }
+      </div>
+    </section>
+  </div>
+</section>

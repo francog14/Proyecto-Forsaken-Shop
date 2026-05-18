@@ -1,0 +1,107 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Catalogo</p>
+      <h1>Prendas</h1>
+      <p class="lead">Administra productos, stock, tallas y categorias.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="cargarDatos()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
+
+  <div class="content-grid">
+    <form class="panel form-grid" (ngSubmit)="guardar()">
+      <h2>{{ formulario.id_prenda ? 'Editar prenda' : 'Nueva prenda' }}</h2>
+
+      <label>
+        Nombre
+        <input name="nombre_prenda" type="text" [(ngModel)]="formulario.nombre_prenda" required>
+      </label>
+
+      <label>
+        Precio
+        <input name="precio_prenda" type="number" min="0" [(ngModel)]="formulario.precio_prenda" required>
+      </label>
+
+      <label>
+        Talla
+        <input name="talla" type="text" [(ngModel)]="formulario.talla" required>
+      </label>
+
+      <label>
+        Color
+        <input name="color" type="text" [(ngModel)]="formulario.color" required>
+      </label>
+
+      <label>
+        Stock
+        <input name="stock_prenda" type="number" min="0" [(ngModel)]="formulario.stock_prenda" required>
+      </label>
+
+      <label>
+        Categoria
+        <select name="id_categoria" [(ngModel)]="formulario.id_categoria" required>
+          <option [ngValue]="0">Selecciona una categoria</option>
+          @for (categoria of categorias(); track categoria.id_categoria) {
+            <option [ngValue]="categoria.id_categoria">{{ categoria.nombre_categoria }}</option>
+          }
+        </select>
+      </label>
+
+      <div class="form-actions">
+        <button class="primary-button" type="submit">{{ formulario.id_prenda ? 'Guardar cambios' : 'Crear prenda' }}</button>
+        <button class="secondary-button" type="button" (click)="cancelar()">Limpiar</button>
+      </div>
+    </form>
+
+    <section class="panel">
+      <div class="section-title">
+        <h2>Listado</h2>
+        <span>{{ prendas().length }} registros</span>
+      </div>
+
+      <div class="table-wrap">
+        <table>
+          <thead>
+            <tr>
+              <th>ID</th>
+              <th>Prenda</th>
+              <th>Categoria</th>
+              <th>Precio</th>
+              <th>Stock</th>
+              <th>Acciones</th>
+            </tr>
+          </thead>
+          <tbody>
+            @for (prenda of prendas(); track prenda.id_prenda) {
+              <tr>
+                <td>{{ prenda.id_prenda }}</td>
+                <td>
+                  <strong>{{ prenda.nombre_prenda }}</strong>
+                  <span>{{ prenda.talla }} - {{ prenda.color }}</span>
+                </td>
+                <td>{{ nombreCategoria(prenda.id_categoria) }}</td>
+                <td>{{ prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</td>
+                <td>{{ prenda.stock_prenda }}</td>
+                <td class="row-actions">
+                  <button type="button" (click)="editar(prenda)">Editar</button>
+                  <button type="button" class="danger" (click)="eliminar(prenda.id_prenda)">Eliminar</button>
+                </td>
+              </tr>
+            } @empty {
+              <tr>
+                <td colspan="6" class="empty-state">{{ cargando() ? 'Cargando prendas...' : 'No hay prendas registradas.' }}</td>
+              </tr>
+            }
+          </tbody>
+        </table>
+      </div>
+    </section>
+  </div>
+</section>

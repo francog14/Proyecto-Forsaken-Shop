@@ -1,0 +1,10 @@
+.center-page {
+  display: grid;
+  min-height: calc(100dvh - 72px);
+  place-items: center;
+}
+
+.not-found {
+  max-width: 520px;
+  text-align: center;
+}

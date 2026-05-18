@@ -1,0 +1,75 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Soporte</p>
+      <h1>Mensajes</h1>
+      <p class="lead">Gestiona consultas de usuarios relacionadas con pedidos o productos.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="cargarDatos()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
+
+  <div class="content-grid">
+    <form class="panel form-grid" (ngSubmit)="guardar()">
+      <h2>{{ formulario.id_mensaje ? 'Editar mensaje' : 'Nuevo mensaje' }}</h2>
+
+      <label>
+        Usuario
+        <select name="id_usuario" [(ngModel)]="formulario.id_usuario" required>
+          <option [ngValue]="0">Selecciona un usuario</option>
+          @for (usuario of usuarios(); track usuario.id_usuario) {
+            <option [ngValue]="usuario.id_usuario">{{ usuario.nombre }}</option>
+          }
+        </select>
+      </label>
+
+      <label>
+        Fecha
+        <input name="fecha_envio" type="date" [(ngModel)]="formulario.fecha_envio" required>
+      </label>
+
+      <label>
+        Asunto
+        <input name="asunto" type="text" [(ngModel)]="formulario.asunto" required>
+      </label>
+
+      <label>
+        Contenido
+        <textarea name="contenido" rows="6" [(ngModel)]="formulario.contenido" required></textarea>
+      </label>
+
+      <div class="form-actions">
+        <button class="primary-button" type="submit">{{ formulario.id_mensaje ? 'Guardar cambios' : 'Crear mensaje' }}</button>
+        <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
+      </div>
+    </form>
+
+    <section class="message-list">
+      @for (mensaje of mensajes(); track mensaje.id_mensaje) {
+        <article class="panel message-card">
+          <div class="section-title">
+            <div>
+              <h2>{{ mensaje.asunto }}</h2>
+              <span>{{ nombreUsuario(mensaje.id_usuario) }} - {{ mensaje.fecha_envio | date:'yyyy-MM-dd' }}</span>
+            </div>
+            <div class="row-actions">
+              <button type="button" (click)="editar(mensaje)">Editar</button>
+              <button type="button" class="danger" (click)="eliminar(mensaje.id_mensaje)">Eliminar</button>
+            </div>
+          </div>
+          <p>{{ mensaje.contenido }}</p>
+        </article>
+      } @empty {
+        <section class="panel">
+          <p class="empty-state">No hay mensajes registrados.</p>
+        </section>
+      }
+    </section>
+  </div>
+</section>
