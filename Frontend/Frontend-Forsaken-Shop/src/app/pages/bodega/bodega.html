@@ -1,0 +1,54 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Bodeguero</p>
+      <h1>Control de inventario</h1>
+      <p class="lead">Revisa stock, detecta prendas criticas y administra el catalogo de bodega.</p>
+    </div>
+    <a class="primary-button" routerLink="/catalogo">Administrar prendas</a>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span>Prendas</span>
+      <strong>{{ prendas().length }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Stock total</span>
+      <strong>{{ stockTotal() }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Bajo stock</span>
+      <strong>{{ bajoStock().length }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Sin stock</span>
+      <strong>{{ sinStock() }}</strong>
+    </article>
+  </div>
+
+  <section class="panel">
+    <div class="section-title">
+      <h2>Prendas criticas</h2>
+      <a class="text-link" routerLink="/catalogo">Editar stock</a>
+    </div>
+
+    <div class="simple-list">
+      @for (prenda of bajoStock(); track prenda.id_prenda) {
+        <article>
+          <div>
+            <strong>{{ prenda.nombre_prenda }}</strong>
+            <span>{{ nombreCategoria(prenda.id_categoria) }} - {{ prenda.talla }} - {{ prenda.color }}</span>
+          </div>
+          <strong>Stock {{ prenda.stock_prenda }}</strong>
+        </article>
+      } @empty {
+        <p class="empty-state">No hay prendas con bajo stock.</p>
+      }
+    </div>
+  </section>
+</section>

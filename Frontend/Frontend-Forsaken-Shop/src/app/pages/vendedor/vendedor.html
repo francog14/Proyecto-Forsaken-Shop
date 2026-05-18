@@ -1,0 +1,66 @@
+<section class="page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Vendedor</p>
+      <h1>Gestion de ventas</h1>
+      <p class="lead">Consulta ventas registradas, clientes asociados y el movimiento comercial.</p>
+    </div>
+    <a class="primary-button" routerLink="/ventas">Registrar venta</a>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+
+  <div class="stats-grid">
+    <article class="stat-card">
+      <span>Ventas</span>
+      <strong>{{ ventas().length }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Total vendido</span>
+      <strong>{{ totalVendido() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Prendas vendidas</span>
+      <strong>{{ prendasVendidas() }}</strong>
+    </article>
+    <article class="stat-card">
+      <span>Clientes</span>
+      <strong>{{ usuarios().length }}</strong>
+    </article>
+  </div>
+
+  <section class="panel">
+    <div class="section-title">
+      <h2>Ultimas ventas</h2>
+      <a class="text-link" routerLink="/ventas">Ver mantenedor</a>
+    </div>
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>ID</th>
+            <th>Fecha</th>
+            <th>Cliente</th>
+            <th>Total</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (venta of ventas(); track venta.id_venta) {
+            <tr>
+              <td>{{ venta.id_venta }}</td>
+              <td>{{ venta.fecha | date:'yyyy-MM-dd' }}</td>
+              <td>{{ nombreUsuario(venta.id_usuario) }}</td>
+              <td>{{ venta.total | currency:'CLP':'symbol-narrow':'1.0-0' }}</td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="4" class="empty-state">No hay ventas registradas.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+</section>
