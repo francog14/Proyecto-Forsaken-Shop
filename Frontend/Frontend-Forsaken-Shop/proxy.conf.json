@@ -1,0 +1,44 @@
+{
+  "/api/categorias": {
+    "target": "http://localhost:7070",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/roles": {
+    "target": "http://localhost:7075",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/usuarios": {
+    "target": "http://localhost:7076",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/ventas": {
+    "target": "http://localhost:7077",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/detalles-ventas": {
+    "target": "http://localhost:7078",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/mensajes": {
+    "target": "http://localhost:7079",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  },
+  "/api/prendas": {
+    "target": "http://localhost:7580",
+    "secure": false,
+    "changeOrigin": true,
+    "pathRewrite": { "^/api": "" }
+  }
+}
