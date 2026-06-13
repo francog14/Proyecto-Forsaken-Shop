@@ -1,7 +1,7 @@
 .topbar {
   align-items: center;
   backdrop-filter: blur(18px);
-  background: rgba(247, 245, 242, 0.9);
+  background: rgba(23, 21, 19, 0.9);
   border-bottom: 1px solid var(--line);
   display: flex;
   gap: 18px;
@@ -15,7 +15,7 @@
 
 .topbar.is-scrolled,
 .topbar.menu-open {
-  box-shadow: 0 12px 30px rgba(36, 36, 36, 0.1);
+  box-shadow: 0 12px 30px rgba(0, 0, 0, 0.32);
 }
 
 .brand {
@@ -31,10 +31,10 @@
 
 .brand-mark {
   align-items: center;
-  background: linear-gradient(135deg, var(--color-primary), var(--accent));
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   border-radius: 8px;
   box-shadow: 0 12px 22px rgba(184, 138, 100, 0.26);
-  color: #ffffff;
+  color: #171513;
   display: inline-flex;
   height: 38px;
   justify-content: center;
@@ -146,7 +146,7 @@
 
 .session-box button:hover,
 .login-link:hover {
-  background: #ffffff;
+  background: var(--surface);
   border-color: rgba(184, 138, 100, 0.42);
   transform: translateY(-1px);
 }
