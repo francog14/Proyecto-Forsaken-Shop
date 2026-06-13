@@ -155,6 +155,7 @@ mvnw.cmd -DskipTests package
 Consultas manuales:
 
 - Usar `Backend/consultas.rest` con REST Client.
+- Probar `GET /` en cada microservicio para verificar nombre y version del servicio.
 - Verificar que los puertos coincidan con `application.properties`.
 - Confirmar que MySQL este activo antes de iniciar los microservicios.
 

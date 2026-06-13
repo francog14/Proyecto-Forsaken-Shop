@@ -4,6 +4,46 @@
 ###########################################################
 
 ###########################################################
+# ESTADO BASE DE MICROSERVICIOS
+###########################################################
+
+### Categoria
+GET http://localhost:7070/
+Content-Type: application/json
+
+### Rol
+GET http://localhost:7075/
+Content-Type: application/json
+
+### Venta
+GET http://localhost:7077/
+Content-Type: application/json
+
+### Detalle venta
+GET http://localhost:7078/
+Content-Type: application/json
+
+### Mensajeria
+GET http://localhost:7079/
+Content-Type: application/json
+
+### Pedido
+GET http://localhost:7080/
+Content-Type: application/json
+
+### Auth
+GET http://localhost:7081/
+Content-Type: application/json
+
+### Usuario
+GET http://localhost:7082/
+Content-Type: application/json
+
+### Prenda
+GET http://localhost:7580/
+Content-Type: application/json
+
+###########################################################
 # 1. CATEGORIA - Puerto 7070
 ###########################################################
 
