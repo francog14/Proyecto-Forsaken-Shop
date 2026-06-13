@@ -1,6 +1,6 @@
 {
   "/api/categorias": {
-    "target": "http://localhost:7070",
+    "target": "http://localhost:7070/",
     "secure": false,
     "changeOrigin": true,
     "pathRewrite": { "^/api": "" }

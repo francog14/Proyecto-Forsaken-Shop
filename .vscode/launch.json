@@ -2,11 +2,61 @@
     "configurations": [
         {
             "type": "java",
-            "name": "Spring Boot-MicroservicioUsuarioApplication<Microservicio-Usuario>",
+            "name": "Spring Boot-MicroservicioAuthApplication<Microservicio-Auth>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.usuario.Microservicio_Usuario.MicroservicioUsuarioApplication",
-            "projectName": "Microservicio-Usuario",
+            "mainClass": "com.auth.Microservicio_Auth.MicroservicioAuthApplication",
+            "projectName": "Microservicio-Auth",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroservicioCategoriaApplication<Microservicio-Categoria>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.categoria.Microservicio_Categoria.MicroservicioCategoriaApplication",
+            "projectName": "Microservicio-Categoria",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroservicioDetalleVentaApplication<Microservicio-Detalle-Venta>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.detalle_venta.Microservicio_Detalle_Venta.MicroservicioDetalleVentaApplication",
+            "projectName": "Microservicio-Detalle-Venta",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroservicioMensajeriaApplication<Microservicio-Mensajeria>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.mensajeria.Microservicio_Mensajeria.MicroservicioMensajeriaApplication",
+            "projectName": "Microservicio-Mensajeria",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroservicioPedidoApplication<Microservicio-Pedido>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.pedido.Microservicio_Pedido.MicroservicioPedidoApplication",
+            "projectName": "Microservicio-Pedido",
+            "args": "",
+            "envFile": "${workspaceFolder}/.env"
+        },
+        {
+            "type": "java",
+            "name": "Spring Boot-MicroservicioPrendaApplication<Microservicio-Prenda>",
+            "request": "launch",
+            "cwd": "${workspaceFolder}",
+            "mainClass": "com.prenda.Microservicio_Prenda.MicroservicioPrendaApplication",
+            "projectName": "Microservicio-Prenda",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -22,44 +72,11 @@
         },
         {
             "type": "java",
-            "name": "Spring Boot-MicroservicioCategoriaApplication<Microservicio-Categoria>",
+            "name": "Spring Boot-MicroservicioUsuarioApplication<Microservicio-Usuario>",
             "request": "launch",
             "cwd": "${workspaceFolder}",
-            "mainClass": "com.categoria.Microservicio_Categoria.MicroservicioCategoriaApplication",
-            "projectName": "Microservicio-Categoria",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env",
-            "vmArgs": " -Dcom.sun.management.jmxremote"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-MicroservicioDetalleVentaApplication<Microservicio-Detalle-Venta>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.detalle_venta.Microservicio_Detalle_Venta.MicroservicioDetalleVentaApplication",
-            "projectName": "Microservicio-Detalle-Venta",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env",
-            "vmArgs": " -Dcom.sun.management.jmxremote"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-MicroservicioMensajeriaApplication<Microservicio-Mensajeria>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.mensajeria.Microservicio_Mensajeria.MicroservicioMensajeriaApplication",
-            "projectName": "Microservicio-Mensajeria",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env",
-            "vmArgs": " -Dcom.sun.management.jmxremote"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-MicroservicioPrendaApplication<Microservicio-Prenda>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.prenda.Microservicio_Prenda.MicroservicioPrendaApplication",
-            "projectName": "Microservicio-Prenda",
+            "mainClass": "com.usuario.Microservicio_Usuario.MicroservicioUsuarioApplication",
+            "projectName": "Microservicio-Usuario",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         },
@@ -70,26 +87,6 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "com.venta.Microservicio_Venta.MicroservicioVentaApplication",
             "projectName": "Microservicio-Venta",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-MicroservicioAuthApplication<Microservicio-Auth>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.auth.Microservicio_Auth.MicroservicioAuthApplication",
-            "projectName": "Microservicio-Auth",
-            "args": "",
-            "envFile": "${workspaceFolder}/.env"
-        },
-        {
-            "type": "java",
-            "name": "Spring Boot-MicroservicioPedidoApplication<Microservicio-Pedido>",
-            "request": "launch",
-            "cwd": "${workspaceFolder}",
-            "mainClass": "com.pedido.Microservicio_Pedido.MicroservicioPedidoApplication",
-            "projectName": "Microservicio-Pedido",
             "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
