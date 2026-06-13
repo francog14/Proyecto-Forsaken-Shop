@@ -1,4 +1,7 @@
 .login-page {
+  background:
+    linear-gradient(120deg, rgba(184, 138, 100, 0.14), transparent 35%),
+    linear-gradient(240deg, rgba(36, 36, 36, 0.07), transparent 28%);
   display: grid;
   min-height: calc(100dvh - 72px);
   padding: 30px 18px;
@@ -9,8 +12,19 @@
   display: grid;
   gap: 16px;
   max-width: 500px;
+  overflow: hidden;
   position: relative;
   width: 100%;
+}
+
+.login-panel::before {
+  background: linear-gradient(90deg, var(--color-primary), var(--accent), var(--accent-soft));
+  content: "";
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .login-panel h1 {
@@ -47,7 +61,7 @@
 
 .demo-account:hover {
   background: #ffffff;
-  border-color: rgba(25, 116, 104, 0.28);
+  border-color: rgba(184, 138, 100, 0.42);
   transform: translateY(-1px);
 }
 

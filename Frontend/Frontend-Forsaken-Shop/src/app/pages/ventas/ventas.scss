@@ -6,7 +6,7 @@
 }
 
 .sale-builder::before {
-  background: linear-gradient(90deg, var(--accent), var(--wine), var(--gold));
+  background: linear-gradient(90deg, var(--color-primary), var(--accent), var(--accent-soft));
   content: "";
   height: 4px;
   left: 0;
@@ -52,7 +52,7 @@
 }
 
 .sale-items article:hover {
-  border-color: rgba(25, 116, 104, 0.26);
+  border-color: rgba(184, 138, 100, 0.34);
   box-shadow: 0 14px 26px rgba(16, 24, 32, 0.08);
 }
 

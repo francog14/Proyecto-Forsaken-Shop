@@ -10,12 +10,12 @@
 
     <label>
       Correo
-      <input name="email" type="email" [(ngModel)]="email" required>
+      <input name="email" type="email" autocomplete="email" [(ngModel)]="email" required>
     </label>
 
     <label>
       Contrasena
-      <input name="password" type="password" [(ngModel)]="password" required>
+      <input name="password" type="password" autocomplete="current-password" [(ngModel)]="password" required>
     </label>
 
     <button class="primary-button" type="submit" [disabled]="cargando">

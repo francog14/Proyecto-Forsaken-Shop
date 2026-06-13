@@ -1,11 +1,69 @@
 <section class="shop-page">
-  <div class="shop-hero">
-    <div>
-      <p class="eyebrow">Usuario</p>
-      <h1>Compra prendas de Forsaken Shop</h1>
-      <p class="lead">Explora el catalogo disponible, arma tu carrito y registra la compra en el backend.</p>
+  <section class="shop-hero" aria-labelledby="shop-title">
+    <div class="hero-copy">
+      <p class="eyebrow">Boutique urbana</p>
+      <h1 id="shop-title">Forsaken Shop</h1>
+      <p class="lead">Prendas seleccionadas para un estilo sobrio, actual y facil de combinar. Explora el catalogo, arma tu carrito y revisa tus compras desde la misma vitrina.</p>
+      <div class="hero-actions">
+        <a class="primary-button" href="#catalogo-tienda">Ver catalogo</a>
+        <a class="secondary-button" href="#mis-compras">Mis compras</a>
+      </div>
+      <div class="hero-stats" aria-label="Resumen de tienda">
+        <span><strong>{{ prendas().length }}</strong> prendas</span>
+        <span><strong>{{ categorias().length }}</strong> categorias</span>
+        <span><strong>{{ stockTotal() }}</strong> unidades</span>
+      </div>
     </div>
-  </div>
+    <div class="hero-media" role="img" aria-label="Vitrina elegante con prendas de Forsaken Shop">
+      <div class="lookbook-card lookbook-main">
+        <span>Nueva coleccion</span>
+        <strong>Minimal streetwear</strong>
+      </div>
+      <div class="fabric-swatch"></div>
+      <div class="lookbook-card lookbook-secondary">
+        <span>Calce</span>
+        <strong>S M L XL</strong>
+      </div>
+    </div>
+  </section>
+
+  <section class="category-strip" aria-label="Categorias destacadas">
+    @for (categoria of categoriasDestacadas(); track categoria.id_categoria) {
+      <article>
+        <span>{{ categoria.nombre_categoria }}</span>
+        <strong>{{ cantidadPorCategoria(categoria.id_categoria) }} prendas</strong>
+      </article>
+    } @empty {
+      <article>
+        <span>Categorias</span>
+        <strong>Sin datos</strong>
+      </article>
+    }
+  </section>
+
+  <section class="benefit-strip" aria-label="Beneficios de compra">
+    <article>
+      <span class="chip strong">01</span>
+      <div>
+        <strong>Stock visible</strong>
+        <p>Consulta disponibilidad antes de agregar al carrito.</p>
+      </div>
+    </article>
+    <article>
+      <span class="chip strong">02</span>
+      <div>
+        <strong>Pedido registrado</strong>
+        <p>Cada compra queda vinculada a una venta y pedido.</p>
+      </div>
+    </article>
+    <article>
+      <span class="chip strong">03</span>
+      <div>
+        <strong>Historial claro</strong>
+        <p>Revisa el estado de tus compras en un solo lugar.</p>
+      </div>
+    </article>
+  </section>
 
   @if (error()) {
     <p class="notice error">{{ error() }}</p>
@@ -15,10 +73,38 @@
   }
 
   <div class="shop-layout">
-    <section class="product-grid">
+    <section class="catalog-section" id="catalogo-tienda">
+      <div class="section-title catalog-heading">
+        <div>
+          <p class="eyebrow">Catalogo</p>
+          <h2>Prendas destacadas</h2>
+        </div>
+        <span>{{ prendas().length }} disponibles</span>
+      </div>
+
+      <div class="featured-row">
+        @for (prenda of productosDestacados(); track prenda.id_prenda) {
+          <article>
+            <span class="chip">{{ nombreCategoria(prenda.id_categoria) }}</span>
+            <strong>{{ prenda.nombre_prenda }}</strong>
+            <small>{{ prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</small>
+          </article>
+        } @empty {
+          <article>
+            <span class="chip">Catalogo</span>
+            <strong>Sin destacados</strong>
+            <small>Agrega prendas desde bodega</small>
+          </article>
+        }
+      </div>
+
+      <div class="product-grid">
       @for (prenda of prendas(); track prenda.id_prenda) {
         <article class="product-card">
-          <div class="product-visual">
+          <div class="product-visual" role="img" [attr.aria-label]="'Prenda ' + prenda.nombre_prenda + ', talla ' + prenda.talla">
+            <span class="product-badge" [class.warning]="estadoPrenda(prenda) === 'poco-stock'" [class.success]="estadoPrenda(prenda) === 'disponible'" [class.error]="estadoPrenda(prenda) === 'agotado'">
+              {{ textoEstadoPrenda(prenda) }}
+            </span>
             <span>{{ prenda.talla }}</span>
           </div>
           <div class="product-body">
@@ -27,7 +113,7 @@
             <p>{{ prenda.color }} &middot; Stock {{ prenda.stock_prenda }}</p>
             <div class="product-footer">
               <strong>{{ prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
-              <button class="primary-button" type="button" (click)="agregar(prenda)" [disabled]="prenda.stock_prenda <= 0">
+              <button class="primary-button" type="button" (click)="agregar(prenda)" [disabled]="prenda.stock_prenda <= 0" [attr.aria-label]="'Agregar ' + prenda.nombre_prenda + ' al carrito'">
                 Agregar
               </button>
             </div>
@@ -38,6 +124,7 @@
           <p class="empty-state">No hay prendas disponibles.</p>
         </section>
       }
+      </div>
     </section>
 
     <aside class="panel cart-panel">
@@ -53,8 +140,8 @@
               <strong>{{ item.prenda.nombre_prenda }}</strong>
               <span>{{ item.prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
             </div>
-            <input type="number" min="1" [max]="item.prenda.stock_prenda" [ngModel]="item.cantidad" (ngModelChange)="cambiarCantidad(item.prenda.id_prenda, $event)">
-            <button type="button" class="remove-button" (click)="quitar(item.prenda.id_prenda)">Quitar</button>
+            <input type="number" min="1" [max]="item.prenda.stock_prenda" [ngModel]="item.cantidad" (ngModelChange)="cambiarCantidad(item.prenda.id_prenda, $event)" [attr.aria-label]="'Cantidad de ' + item.prenda.nombre_prenda">
+            <button type="button" class="remove-button" (click)="quitar(item.prenda.id_prenda)" [attr.aria-label]="'Quitar ' + item.prenda.nombre_prenda">Quitar</button>
           </article>
         } @empty {
           <p class="empty-state">Tu carrito esta vacio.</p>
@@ -66,7 +153,7 @@
         <strong>{{ total() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
       </div>
 
-      <button class="primary-button checkout-button" type="button" (click)="comprar()" [disabled]="comprando()">
+      <button class="primary-button checkout-button" type="button" (click)="comprar()" [disabled]="comprando()" aria-label="Comprar prendas del carrito">
         {{ comprando() ? 'Registrando...' : 'Comprar' }}
       </button>
 
@@ -83,7 +170,7 @@
     </aside>
   </div>
 
-  <section class="panel purchase-history">
+  <section class="panel purchase-history" id="mis-compras">
     <div class="section-title">
       <h2>Mis compras</h2>
       <span>{{ misCompras().length }} registros</span>

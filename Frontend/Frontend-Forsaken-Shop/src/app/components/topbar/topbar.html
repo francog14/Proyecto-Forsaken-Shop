@@ -1,12 +1,18 @@
-<header class="topbar">
-  <a class="brand" [routerLink]="actor() === 'admin' ? '/admin' : actor() === 'vendedor' ? '/vendedor' : actor() === 'bodeguero' ? '/bodega' : '/tienda'">
+<header class="topbar" [class.is-scrolled]="scrolled()" [class.menu-open]="menuAbierto()">
+  <a class="brand" [routerLink]="actor() === 'admin' ? '/admin' : actor() === 'vendedor' ? '/vendedor' : actor() === 'bodeguero' ? '/bodega' : '/tienda'" aria-label="Ir al inicio de Forsaken Shop" (click)="cerrarMenu()">
     <span class="brand-mark">FS</span>
-    <span>Forsaken Shop</span>
+    <span class="brand-text">Forsaken Shop</span>
   </a>
+
+  <button class="menu-toggle" type="button" aria-label="Abrir o cerrar menu" [attr.aria-expanded]="menuAbierto()" (click)="alternarMenu()">
+    <span></span>
+    <span></span>
+    <span></span>
+  </button>
 
   <nav class="nav-links" aria-label="Principal">
     @for (link of linksVisibles(); track link.path) {
-      <a [routerLink]="link.path" routerLinkActive="active">
+      <a [routerLink]="link.path" routerLinkActive="active" (click)="cerrarMenu()">
         {{ link.label }}
       </a>
     }
@@ -18,6 +24,6 @@
       <button type="button" (click)="logout()">Salir</button>
     </div>
   } @else {
-    <a class="login-link" routerLink="/login">Iniciar sesion</a>
+    <a class="login-link" routerLink="/login" (click)="cerrarMenu()">Iniciar sesion</a>
   }
 </header>

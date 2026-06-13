@@ -143,6 +143,50 @@ export class TiendaComponent implements OnInit {
     return this.carrito().reduce((acc, item) => acc + item.prenda.precio_prenda * item.cantidad, 0);
   }
 
+  stockTotal() {
+    return this.prendas().reduce((acc, prenda) => acc + prenda.stock_prenda, 0);
+  }
+
+  productosDestacados() {
+    return this.prendas()
+      .filter((prenda) => prenda.stock_prenda > 0)
+      .slice(0, 3);
+  }
+
+  categoriasDestacadas() {
+    return this.categorias().slice(0, 4);
+  }
+
+  cantidadPorCategoria(idCategoria: number) {
+    return this.prendas().filter((prenda) => prenda.id_categoria === idCategoria).length;
+  }
+
+  estadoPrenda(prenda: Prenda) {
+    if (prenda.stock_prenda <= 0) {
+      return 'agotado';
+    }
+
+    if (prenda.stock_prenda <= 3) {
+      return 'poco-stock';
+    }
+
+    return 'disponible';
+  }
+
+  textoEstadoPrenda(prenda: Prenda) {
+    const estado = this.estadoPrenda(prenda);
+
+    if (estado === 'agotado') {
+      return 'Sin stock';
+    }
+
+    if (estado === 'poco-stock') {
+      return 'Poco stock';
+    }
+
+    return 'Disponible';
+  }
+
   comprar() {
     this.error.set('');
     this.exito.set('');

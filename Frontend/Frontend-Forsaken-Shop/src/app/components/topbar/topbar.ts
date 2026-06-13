@@ -1,4 +1,4 @@
-import { Component, computed, inject } from '@angular/core';
+import { Component, HostListener, computed, inject, signal } from '@angular/core';
 import { RouterLink, RouterLinkActive } from '@angular/router';
 import { Actor } from '../../models/forsaken.models';
 import { ActorService } from '../../services/actor.service';
@@ -22,6 +22,8 @@ export class TopbarComponent {
 
   readonly actor = this.actorService.actor;
   readonly session = this.authService.session;
+  readonly menuAbierto = signal(false);
+  readonly scrolled = signal(false);
 
   private readonly links: NavLink[] = [
     { path: '/tienda', label: 'Tienda', actores: ['usuario'] },
@@ -40,8 +42,22 @@ export class TopbarComponent {
     this.links.filter((link) => link.actores.includes(this.actor()))
   );
 
+  @HostListener('window:scroll')
+  onWindowScroll() {
+    this.scrolled.set(window.scrollY > 8);
+  }
+
+  alternarMenu() {
+    this.menuAbierto.update((abierto) => !abierto);
+  }
+
+  cerrarMenu() {
+    this.menuAbierto.set(false);
+  }
+
   logout() {
     this.authService.logout();
     this.actorService.cambiarActor('usuario');
+    this.cerrarMenu();
   }
 }
