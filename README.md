@@ -168,6 +168,13 @@ Backend, desde cada microservicio:
 mvnw.cmd -DskipTests package
 ```
 
+Prueba unitaria incluida en Auth:
+
+```bash
+cd Backend/Auth-Microservicio/Microservicio-Auth
+mvnw.cmd -Dtest=AuthServiceTest test
+```
+
 Consultas manuales:
 
 - Usar `Backend/consultas.rest` con REST Client.
