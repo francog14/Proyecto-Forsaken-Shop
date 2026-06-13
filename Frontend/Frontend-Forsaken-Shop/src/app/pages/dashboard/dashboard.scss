@@ -10,13 +10,10 @@
 
 .metric-list div {
   align-items: center;
-  border-bottom: 1px solid var(--line);
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
   display: flex;
   justify-content: space-between;
-  padding-bottom: 14px;
-}
-
-.metric-list div:last-child {
-  border-bottom: 0;
-  padding-bottom: 0;
+  padding: 14px;
 }

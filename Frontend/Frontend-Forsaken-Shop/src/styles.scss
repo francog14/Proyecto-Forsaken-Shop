@@ -1,17 +1,23 @@
 :root {
-  --bg: #f6f4ef;
+  --bg: #f6f8f5;
   --surface: #ffffff;
-  --ink: #171717;
-  --muted: #6b665f;
-  --line: #e4ded4;
-  --soft: #efebe4;
-  --accent: #256f68;
-  --accent-strong: #19514d;
-  --danger: #b93b3b;
-  --success-bg: #e8f4ee;
-  --success-text: #24664f;
-  --error-bg: #f8e9e7;
-  --error-text: #9b2f2f;
+  --surface-strong: #fbfcfa;
+  --ink: #151917;
+  --muted: #65716b;
+  --line: #dde7e0;
+  --soft: #edf4ef;
+  --accent: #0f6b5f;
+  --accent-strong: #0a5148;
+  --accent-soft: #dceee8;
+  --wine: #8a3f44;
+  --gold: #bd8a35;
+  --danger: #af3434;
+  --success-bg: #e3f5ec;
+  --success-text: #1f654b;
+  --error-bg: #f9e7e5;
+  --error-text: #933030;
+  --shadow-soft: 0 18px 50px rgba(22, 31, 27, 0.08);
+  --shadow-hover: 0 22px 60px rgba(22, 31, 27, 0.13);
   color-scheme: light;
   font-family: Inter, "Segoe UI", Arial, sans-serif;
 }
@@ -22,15 +28,19 @@
 
 html {
   background: var(--bg);
+  scroll-behavior: smooth;
 }
 
 body {
   background:
-    linear-gradient(120deg, rgba(37, 111, 104, 0.08), transparent 42%),
+    linear-gradient(135deg, rgba(15, 107, 95, 0.1) 0%, transparent 34%),
+    linear-gradient(215deg, rgba(138, 63, 68, 0.08) 0%, transparent 30%),
+    linear-gradient(180deg, #fbfcfa 0%, #eef5f0 100%),
     var(--bg);
   color: var(--ink);
   margin: 0;
   min-height: 100dvh;
+  text-rendering: geometricPrecision;
 }
 
 button,
@@ -42,7 +52,7 @@ textarea {
 
 button,
 a {
-  transition: background 160ms ease, border-color 160ms ease, color 160ms ease, transform 160ms ease;
+  transition: background 160ms ease, border-color 160ms ease, box-shadow 160ms ease, color 160ms ease, transform 160ms ease;
 }
 
 button {
@@ -52,7 +62,7 @@ button {
 .page {
   margin: 0 auto;
   max-width: 1240px;
-  padding: 42px 28px;
+  padding: 48px 28px;
   width: 100%;
 }
 
@@ -61,14 +71,15 @@ button {
   display: flex;
   gap: 24px;
   justify-content: space-between;
-  margin-bottom: 28px;
+  margin-bottom: 30px;
+  padding-bottom: 6px;
 }
 
 .eyebrow {
   color: var(--accent);
   font-size: 12px;
   font-weight: 800;
-  letter-spacing: 0.08em;
+  letter-spacing: 0;
   margin: 0 0 8px;
   text-transform: uppercase;
 }
@@ -80,12 +91,12 @@ h2 {
 }
 
 h1 {
-  font-size: clamp(32px, 5vw, 58px);
-  line-height: 1;
+  font-size: 52px;
+  line-height: 0.98;
 }
 
 h2 {
-  font-size: 20px;
+  font-size: 22px;
   line-height: 1.2;
 }
 
@@ -99,14 +110,15 @@ h2 {
 
 .panel,
 .stat-card {
-  background: rgba(255, 255, 255, 0.86);
-  border: 1px solid var(--line);
+  background: rgba(255, 255, 255, 0.9);
+  border: 1px solid rgba(221, 231, 224, 0.9);
   border-radius: 8px;
-  box-shadow: 0 18px 45px rgba(31, 28, 22, 0.07);
+  box-shadow: var(--shadow-soft);
+  backdrop-filter: blur(14px);
 }
 
 .panel {
-  padding: 22px;
+  padding: 24px;
 }
 
 .stats-grid,
@@ -134,12 +146,26 @@ h2 {
   display: flex;
   flex-direction: column;
   justify-content: space-between;
-  padding: 22px;
+  min-height: 138px;
+  overflow: hidden;
+  padding: 23px;
+  position: relative;
   text-decoration: none;
+}
+
+.stat-card::after {
+  background: linear-gradient(90deg, var(--accent), var(--gold), var(--wine));
+  bottom: 0;
+  content: "";
+  height: 3px;
+  left: 0;
+  position: absolute;
+  right: 0;
 }
 
 .stat-card:hover {
   border-color: rgba(37, 111, 104, 0.45);
+  box-shadow: var(--shadow-hover);
   transform: translateY(-2px);
 }
 
@@ -152,7 +178,7 @@ td span,
 }
 
 .stat-card strong {
-  font-size: 42px;
+  font-size: 44px;
   line-height: 1;
 }
 
@@ -179,12 +205,12 @@ label {
 input,
 select,
 textarea {
-  background: #ffffff;
+  background: var(--surface-strong);
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
   outline: none;
-  padding: 12px 13px;
+  padding: 13px 14px;
   width: 100%;
 }
 
@@ -218,23 +244,25 @@ textarea:focus {
   font-weight: 800;
   justify-content: center;
   min-height: 42px;
-  padding: 0 15px;
+  padding: 0 16px;
   text-decoration: none;
 }
 
 .primary-button {
-  background: var(--accent);
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
   border: 1px solid var(--accent);
   color: #ffffff;
+  box-shadow: 0 10px 24px rgba(15, 107, 95, 0.22);
 }
 
 .primary-button:hover {
-  background: var(--accent-strong);
+  box-shadow: 0 12px 30px rgba(15, 107, 95, 0.28);
+  transform: translateY(-1px);
 }
 
 .secondary-button,
 .row-actions button {
-  background: #ffffff;
+  background: rgba(255, 255, 255, 0.76);
   border: 1px solid var(--line);
   color: var(--ink);
 }
@@ -261,6 +289,8 @@ textarea:focus {
 }
 
 .table-wrap {
+  border: 1px solid var(--line);
+  border-radius: 8px;
   overflow-x: auto;
 }
 
@@ -273,16 +303,29 @@ table {
 th,
 td {
   border-bottom: 1px solid var(--line);
-  padding: 14px 12px;
+  padding: 15px 14px;
   text-align: left;
   vertical-align: middle;
 }
 
 th {
+  background: var(--soft);
   color: var(--muted);
   font-size: 12px;
   font-weight: 900;
   text-transform: uppercase;
+}
+
+tbody tr {
+  background: rgba(255, 255, 255, 0.68);
+}
+
+tbody tr:hover {
+  background: rgba(237, 244, 239, 0.72);
+}
+
+tbody tr:last-child td {
+  border-bottom: 0;
 }
 
 td strong,
@@ -292,6 +335,7 @@ td span {
 
 .notice {
   border-radius: 8px;
+  border: 1px solid transparent;
   font-weight: 700;
   margin: 0 0 18px;
   padding: 12px 14px;
@@ -299,11 +343,13 @@ td span {
 
 .notice.error {
   background: var(--error-bg);
+  border-color: rgba(175, 52, 52, 0.15);
   color: var(--error-text);
 }
 
 .notice.success {
   background: var(--success-bg);
+  border-color: rgba(31, 101, 75, 0.16);
   color: var(--success-text);
 }
 
@@ -320,6 +366,7 @@ td span {
 
 .simple-list article {
   align-items: center;
+  background: rgba(255, 255, 255, 0.58);
   border: 1px solid var(--line);
   border-radius: 8px;
   display: flex;
@@ -331,6 +378,14 @@ td span {
 @media (max-width: 900px) {
   .page {
     padding: 30px 18px;
+  }
+
+  h1 {
+    font-size: 40px;
+  }
+
+  h2 {
+    font-size: 21px;
   }
 
   .page-heading,
@@ -349,6 +404,14 @@ td span {
 }
 
 @media (max-width: 560px) {
+  h1 {
+    font-size: 34px;
+  }
+
+  h2 {
+    font-size: 20px;
+  }
+
   .stats-grid {
     grid-template-columns: 1fr;
   }

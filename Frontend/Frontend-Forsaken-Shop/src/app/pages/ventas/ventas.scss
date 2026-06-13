@@ -1,6 +1,18 @@
 .sale-builder {
   display: grid;
   gap: 20px;
+  overflow: hidden;
+  position: relative;
+}
+
+.sale-builder::before {
+  background: linear-gradient(90deg, var(--accent), var(--wine), var(--gold));
+  content: "";
+  height: 4px;
+  left: 0;
+  position: absolute;
+  right: 0;
+  top: 0;
 }
 
 .sale-builder .section-title strong {
@@ -9,9 +21,13 @@
 
 .sale-form {
   align-items: end;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
   display: grid;
   gap: 14px;
   grid-template-columns: repeat(4, minmax(0, 1fr)) auto;
+  padding: 16px;
 }
 
 .add-item-button {
@@ -25,12 +41,19 @@
 
 .sale-items article {
   align-items: center;
+  background: rgba(255, 255, 255, 0.78);
   border: 1px solid var(--line);
   border-radius: 8px;
   display: grid;
   gap: 14px;
   grid-template-columns: minmax(0, 1fr) auto auto auto;
   padding: 14px;
+  transition: border-color 180ms ease, box-shadow 180ms ease;
+}
+
+.sale-items article:hover {
+  border-color: rgba(25, 116, 104, 0.26);
+  box-shadow: 0 14px 26px rgba(16, 24, 32, 0.08);
 }
 
 .remove-button {

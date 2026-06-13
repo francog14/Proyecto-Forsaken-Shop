@@ -8,12 +8,14 @@
 .login-panel {
   display: grid;
   gap: 16px;
-  max-width: 460px;
+  max-width: 500px;
+  position: relative;
   width: 100%;
 }
 
 .login-panel h1 {
-  font-size: 42px;
+  font-size: 44px;
+  margin-bottom: 8px;
 }
 
 .demo-list {
@@ -27,17 +29,26 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
 .demo-account {
-  background: #ffffff;
+  background: var(--surface-strong);
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
   font-weight: 700;
   min-height: 38px;
+  padding: 12px 14px;
   text-align: left;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.demo-account:hover {
+  background: #ffffff;
+  border-color: rgba(25, 116, 104, 0.28);
+  transform: translateY(-1px);
 }
 
 button:disabled {

@@ -1,7 +1,9 @@
 .topbar {
   align-items: center;
-  background: rgba(255, 255, 255, 0.9);
+  backdrop-filter: blur(18px);
+  background: rgba(251, 252, 250, 0.88);
   border-bottom: 1px solid var(--line);
+  box-shadow: 0 10px 28px rgba(16, 24, 32, 0.06);
   display: flex;
   gap: 18px;
   justify-content: space-between;
@@ -25,8 +27,9 @@
 
 .brand-mark {
   align-items: center;
-  background: var(--ink);
+  background: linear-gradient(135deg, var(--ink), var(--accent));
   border-radius: 8px;
+  box-shadow: 0 12px 22px rgba(25, 116, 104, 0.22);
   color: #ffffff;
   display: inline-flex;
   height: 38px;
@@ -49,12 +52,14 @@
   font-weight: 700;
   padding: 10px 12px;
   text-decoration: none;
+  transition: background 180ms ease, color 180ms ease, transform 180ms ease;
 }
 
 .nav-links a.active,
 .nav-links a:hover {
-  background: var(--soft);
+  background: var(--accent-soft);
   color: var(--ink);
+  transform: translateY(-1px);
 }
 
 .session-box {
@@ -68,6 +73,7 @@
   color: var(--muted);
   font-size: 12px;
   font-weight: 800;
+  letter-spacing: 0;
   text-transform: uppercase;
 }
 
@@ -77,7 +83,7 @@
 
 .session-box button,
 .login-link {
-  background: #ffffff;
+  background: var(--surface-strong);
   border: 1px solid var(--line);
   border-radius: 8px;
   color: var(--ink);
@@ -86,6 +92,14 @@
   min-height: 38px;
   padding: 8px 12px;
   text-decoration: none;
+  transition: background 180ms ease, border-color 180ms ease, transform 180ms ease;
+}
+
+.session-box button:hover,
+.login-link:hover {
+  background: #ffffff;
+  border-color: rgba(25, 116, 104, 0.28);
+  transform: translateY(-1px);
 }
 
 @media (max-width: 760px) {
