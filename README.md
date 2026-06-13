@@ -65,6 +65,22 @@ Proyecto-Forsaken-Shop/
 | Usuario | 7082 | usuario_db | Clientes, vendedores y usuarios del sistema. |
 | Prenda | 7580 | prenda_db | Catalogo, stock, tallas y colores. |
 
+## Swagger / OpenAPI
+
+Cada microservicio expone documentacion interactiva con Swagger UI:
+
+| Microservicio | Swagger UI | OpenAPI JSON |
+| --- | --- | --- |
+| Categoria | http://localhost:7070/swagger-ui.html | http://localhost:7070/v3/api-docs |
+| Rol | http://localhost:7075/swagger-ui.html | http://localhost:7075/v3/api-docs |
+| Venta | http://localhost:7077/swagger-ui.html | http://localhost:7077/v3/api-docs |
+| Detalle Venta | http://localhost:7078/swagger-ui.html | http://localhost:7078/v3/api-docs |
+| Mensajeria | http://localhost:7079/swagger-ui.html | http://localhost:7079/v3/api-docs |
+| Pedido | http://localhost:7080/swagger-ui.html | http://localhost:7080/v3/api-docs |
+| Auth | http://localhost:7081/swagger-ui.html | http://localhost:7081/v3/api-docs |
+| Usuario | http://localhost:7082/swagger-ui.html | http://localhost:7082/v3/api-docs |
+| Prenda | http://localhost:7580/swagger-ui.html | http://localhost:7580/v3/api-docs |
+
 ## Requisitos
 
 - Java 21.
@@ -156,6 +172,7 @@ Consultas manuales:
 
 - Usar `Backend/consultas.rest` con REST Client.
 - Probar `GET /` en cada microservicio para verificar nombre y version del servicio.
+- Abrir `/swagger-ui.html` en el puerto de cada microservicio para revisar su documentacion.
 - Verificar que los puertos coincidan con `application.properties`.
 - Confirmar que MySQL este activo antes de iniciar los microservicios.
 
