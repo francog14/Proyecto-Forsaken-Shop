@@ -17,10 +17,6 @@ import com.prenda.Microservicio_Prenda.models.request.PrendaActualizarRequest;
 import com.prenda.Microservicio_Prenda.models.request.PrendaRequest;
 import com.prenda.Microservicio_Prenda.service.PrendaService;
 
-
-
-
-
 @RequestMapping("/prendas")
 @RestController
 public class PrendaController {
@@ -28,12 +24,12 @@ public class PrendaController {
     @Autowired
     private PrendaService prendaService;
 
-    @GetMapping("")//localhost:7580/prendas
+    @GetMapping("")
     public List<Prenda> obtenerTodasLasPrendas() {
         return prendaService.obtenerTodasLasPrendas();
     }
     
-    @GetMapping("/{id_prenda}")//localhost:7580/prendas/{id_prenda}
+    @GetMapping("/{id_prenda}")
     public Prenda obtenerPrendaPorId(@PathVariable int id_prenda){
         return prendaService.obtenePrendaPorId(id_prenda);
     }
