@@ -1,0 +1,218 @@
+.sidebar {
+  background: #1A1816;
+  border-right: 1px solid var(--line);
+  display: flex;
+  flex-direction: column;
+  height: 100vh;
+  overflow-y: auto;
+  position: sticky;
+  top: 0;
+  width: var(--sidebar-width);
+  z-index: 10;
+}
+
+/* ── Brand ─────────────────────── */
+
+.sidebar-brand {
+  align-items: center;
+  border-bottom: 1px solid var(--line);
+  display: flex;
+  gap: 12px;
+  min-height: var(--topbar-height);
+  padding: 0 20px;
+}
+
+.brand-mark {
+  align-items: center;
+  background: linear-gradient(135deg, var(--accent), var(--accent-strong));
+  border-radius: 8px;
+  box-shadow: 0 12px 22px rgba(184, 138, 100, 0.26);
+  color: #171513;
+  display: inline-flex;
+  height: 38px;
+  justify-content: center;
+  margin-right: 12px;
+  width: 38px;
+  font-weight: 900;
+}
+
+.brand-text {
+  color: var(--ink);
+  font-size: 16px;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+}
+
+/* ── Navigation ─────────────────────── */
+
+.sidebar-nav {
+  display: grid;
+  flex: 1;
+  gap: 2px;
+  padding: 16px 12px;
+  align-content: start;
+}
+
+.sidebar-link {
+  align-items: center;
+  background: transparent;
+  border: 1px solid transparent;
+  border-radius: 8px;
+  color: var(--muted);
+  cursor: pointer;
+  display: flex;
+  font-size: 13px;
+  font-weight: 600;
+  gap: 10px;
+  min-height: 40px;
+  padding: 0 12px;
+  text-decoration: none;
+  transition: all 180ms ease;
+  width: 100%;
+}
+
+.sidebar-link:hover {
+  background: rgba(184, 138, 100, 0.08);
+  color: var(--ink);
+}
+
+.sidebar-link.active {
+  background: rgba(184, 138, 100, 0.14);
+  border-color: rgba(184, 138, 100, 0.2);
+  color: var(--accent-strong);
+}
+
+.sidebar-link.active .sidebar-icon {
+  color: var(--accent);
+}
+
+.sidebar-icon {
+  align-items: center;
+  color: var(--muted);
+  display: inline-flex;
+  flex-shrink: 0;
+  height: 18px;
+  justify-content: center;
+  transition: color 180ms ease;
+  width: 18px;
+}
+
+.sidebar-label {
+  flex: 1;
+  text-align: left;
+}
+
+/* ── Chevron for submenus ─────────────────────── */
+
+.sidebar-chevron {
+  flex-shrink: 0;
+  opacity: 0.5;
+  transition: transform 200ms ease;
+}
+
+.sidebar-group.expanded .sidebar-chevron {
+  transform: rotate(180deg);
+}
+
+.sidebar-link.has-children {
+  font-size: 13px;
+}
+
+/* ── Submenu ─────────────────────── */
+
+.sidebar-children {
+  display: grid;
+  gap: 1px;
+  max-height: 0;
+  overflow: hidden;
+  padding-left: 22px;
+  transition: max-height 250ms ease, padding 250ms ease;
+}
+
+.sidebar-group.expanded .sidebar-children {
+  max-height: 200px;
+  padding-top: 4px;
+  padding-bottom: 4px;
+}
+
+.sidebar-link.child {
+  font-size: 12px;
+  min-height: 34px;
+  padding-left: 18px;
+  position: relative;
+}
+
+.sidebar-link.child::before {
+  background: var(--line);
+  border-radius: 999px;
+  content: "";
+  height: 4px;
+  left: 6px;
+  position: absolute;
+  width: 4px;
+}
+
+.sidebar-link.child.active::before {
+  background: var(--accent);
+}
+
+/* ── Footer / User ─────────────────────── */
+
+.sidebar-footer {
+  border-top: 1px solid var(--line);
+  margin-top: auto;
+  padding: 16px 16px;
+}
+
+.sidebar-user {
+  align-items: center;
+  display: flex;
+  gap: 10px;
+}
+
+.sidebar-avatar {
+  align-items: center;
+  background: linear-gradient(135deg, var(--accent-soft), rgba(184, 138, 100, 0.2));
+  border: 1px solid rgba(184, 138, 100, 0.25);
+  border-radius: 50%;
+  color: var(--accent);
+  display: inline-flex;
+  flex-shrink: 0;
+  font-size: 13px;
+  font-weight: 800;
+  height: 32px;
+  justify-content: center;
+  width: 32px;
+}
+
+.sidebar-user-info {
+  display: grid;
+  gap: 1px;
+  min-width: 0;
+}
+
+.sidebar-user-info strong {
+  font-size: 13px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.sidebar-user-info small {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+  text-transform: capitalize;
+}
+
+/* ── Mobile overlay ─────────────────────── */
+
+@media (max-width: 900px) {
+  .sidebar {
+    background: rgba(26, 24, 22, 0.98);
+    backdrop-filter: blur(20px);
+    height: 100%;
+    width: 280px;
+  }
+}

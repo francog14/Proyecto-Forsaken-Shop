@@ -1,0 +1,101 @@
+<section class="shop-page animate-in">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Catálogo</p>
+      <h1>Nuestras Prendas</h1>
+      <p class="lead">Explora nuestra colección medieval boutique con diseños de alta calidad.</p>
+    </div>
+    <button class="secondary-button" type="button" (click)="cargarCatalogo()">Actualizar</button>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success animate-in" style="position: fixed; bottom: 20px; right: 20px; z-index: 1000; box-shadow: 0 10px 30px rgba(0,0,0,0.5);">{{ exito() }}</p>
+  }
+
+  <div class="shop-layout">
+    <section class="catalog-section">
+      <!-- Filters Bar -->
+      <div class="filters-bar">
+        <div class="filter-group">
+          <label class="filter-label">Tamaño</label>
+          <div class="size-buttons">
+            @for (size of availableSizes; track size) {
+              <button type="button" class="size-btn" [class.active]="selectedSize() === size" (click)="toggleSize(size)">{{ size }}</button>
+            }
+          </div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Color</label>
+          <div class="color-swatches">
+            @for (color of availableColors(); track color) {
+              <button type="button" class="color-swatch" [class.active]="selectedColor() === color" [title]="color" (click)="toggleColor(color)">
+                {{ color.charAt(0) }}
+              </button>
+            }
+          </div>
+        </div>
+        <div class="filter-group">
+          <label class="filter-label">Precio</label>
+          <div class="price-range">
+            <span>{{ precioMin() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+            <span>—</span>
+            <span>{{ precioMax() | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+          </div>
+        </div>
+        @if (selectedSize() || selectedColor()) {
+          <button type="button" class="secondary-button clear-filters" (click)="clearFilters()">Limpiar filtros</button>
+        }
+      </div>
+
+      <div class="section-title catalog-heading">
+        <div>
+          <h2>Prendas disponibles</h2>
+        </div>
+        <span>{{ filteredPrendas().length }} disponibles</span>
+      </div>
+
+      <!-- Product Grid -->
+      <div class="product-grid">
+        @for (prenda of filteredPrendas(); track prenda.id_prenda) {
+          <article class="product-card">
+            <div class="product-visual" role="img" [attr.aria-label]="'Prenda ' + prenda.nombre_prenda + ', talla ' + prenda.talla">
+              <span class="product-badge" [class.warning]="estadoPrenda(prenda) === 'poco-stock'" [class.success]="estadoPrenda(prenda) === 'disponible'" [class.error]="estadoPrenda(prenda) === 'agotado'" style="z-index: 2;">
+                {{ textoEstadoPrenda(prenda) }}
+              </span>
+              @if (obtenerImagenPrenda(prenda.nombre_prenda); as imgUrl) {
+                <img [src]="imgUrl" [alt]="prenda.nombre_prenda" class="product-image" />
+              } @else {
+                <span class="product-initial">{{ prenda.nombre_prenda.charAt(0) }}</span>
+              }
+            </div>
+            <div class="product-body">
+              <span class="category">{{ nombreCategoria(prenda.id_categoria) }}</span>
+              <h2>{{ prenda.nombre_prenda }}</h2>
+              <div class="product-stars">
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star filled">★</span>
+                <span class="star">★</span>
+              </div>
+              <p>{{ prenda.color }} · Talla {{ prenda.talla }} · Stock {{ prenda.stock_prenda }}</p>
+              <div class="product-footer">
+                <strong>{{ prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+                <button class="primary-button add-btn" type="button" (click)="agregarAlCarrito(prenda)" [disabled]="prenda.stock_prenda <= 0" [attr.aria-label]="'Agregar ' + prenda.nombre_prenda + ' al carrito'">
+                  Añadir al Carrito
+                </button>
+              </div>
+            </div>
+          </article>
+        } @empty {
+          <section class="panel">
+            <p class="empty-state">No hay prendas que coincidan con los filtros.</p>
+          </section>
+        }
+      </div>
+    </section>
+  </div>
+</section>

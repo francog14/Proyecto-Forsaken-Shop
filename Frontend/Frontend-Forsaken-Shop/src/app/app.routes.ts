@@ -11,6 +11,9 @@ import { TiendaComponent } from './pages/tienda/tienda';
 import { UsuariosComponent } from './pages/usuarios/usuarios';
 import { VentasComponent } from './pages/ventas/ventas';
 import { VendedorComponent } from './pages/vendedor/vendedor';
+import { MiCuentaComponent } from './pages/mi-cuenta/mi-cuenta';
+import { ProductosClienteComponent } from './pages/productos-cliente/productos-cliente';
+import { CarritoComponent } from './pages/carrito/carrito';
 
 export const routes: Routes = [
   { path: '', component: TiendaComponent },
@@ -25,6 +28,9 @@ export const routes: Routes = [
   { path: 'ventas', component: VentasComponent },
   { path: 'pedidos', component: PedidosComponent },
   { path: 'mensajes', component: MensajesComponent },
+  { path: 'mi-cuenta', component: MiCuentaComponent },
+  { path: 'productos', component: ProductosClienteComponent },
+  { path: 'carrito', component: CarritoComponent },
   { path: '404', component: NotFoundComponent },
   { path: '**', redirectTo: '404' },
 ];

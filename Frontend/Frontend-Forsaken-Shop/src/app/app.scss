@@ -1,3 +1,10 @@
-.app-shell {
-  min-height: calc(100dvh - 72px);
+/* App shell styles are primarily in styles.scss (.app-shell, .has-sidebar, etc.) */
+
+/* Mobile sidebar overlay backdrop */
+.app-shell.has-sidebar.sidebar-mobile-open::before {
+  background: rgba(0, 0, 0, 0.6);
+  content: "";
+  inset: 0;
+  position: fixed;
+  z-index: 99;
 }

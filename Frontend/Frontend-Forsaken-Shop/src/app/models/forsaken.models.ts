@@ -76,3 +76,14 @@ export type VentaForm = Omit<Venta, 'id_venta'>;
 export type DetalleVentaForm = Omit<DetalleVenta, 'id_detalle_venta'>;
 export type MensajeForm = Omit<Mensaje, 'id_mensaje'>;
 export type PedidoForm = Omit<Pedido, 'id_pedido'>;
+
+export interface CarritoItem {
+  prenda: Prenda;
+  cantidad: number;
+}
+
+export interface ComprobanteItem {
+  nombre: string;
+  cantidad: number;
+  precio: number;
+}

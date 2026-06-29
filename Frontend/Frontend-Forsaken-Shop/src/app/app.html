@@ -1,4 +1,19 @@
-<app-topbar />
-<main class="app-shell">
-  <router-outlet />
-</main>
+<div class="app-shell" [class.has-sidebar]="showSidebar()" [class.sidebar-mobile-open]="sidebarMobileOpen()">
+  @if (showSidebar()) {
+    <div class="app-sidebar-area">
+      <app-sidebar (closeMobile)="closeSidebarMobile()" />
+    </div>
+  }
+
+  <div class="app-topbar-area">
+    <app-topbar (toggleMobileSidebar)="toggleSidebarMobile()" />
+  </div>
+
+  <main class="app-content-area">
+    <router-outlet />
+  </main>
+
+  <div class="app-footer-area">
+    <app-footer />
+  </div>
+</div>

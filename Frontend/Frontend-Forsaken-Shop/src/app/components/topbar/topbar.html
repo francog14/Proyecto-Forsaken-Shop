@@ -1,27 +1,144 @@
-<header class="topbar" [class.is-scrolled]="scrolled()" [class.menu-open]="menuAbierto()">
-  <a class="brand" [routerLink]="actor() === 'admin' ? '/admin' : actor() === 'vendedor' ? '/vendedor' : actor() === 'bodeguero' ? '/bodega' : '/tienda'" aria-label="Ir al inicio de Forsaken Shop" (click)="cerrarMenu()">
-    <span class="brand-mark">FS</span>
-    <span class="brand-text">Forsaken Shop</span>
-  </a>
+<header class="topbar" [class.is-scrolled]="scrolled()" [class.menu-open]="menuAbierto()" [class.sidebar-mode]="hasSidebar()">
+  <!-- Brand (only for storefront / no-sidebar mode) -->
+  @if (!hasSidebar()) {
+    <a class="brand" routerLink="/tienda" aria-label="Ir al inicio de Forsaken Shop" (click)="cerrarMenu()">
+      <span class="brand-mark">FS</span>
+      <span class="brand-text">Forsaken Shop</span>
+    </a>
+  }
 
-  <button class="menu-toggle" type="button" aria-label="Abrir o cerrar menu" [attr.aria-expanded]="menuAbierto()" (click)="alternarMenu()">
+  <!-- Hamburger menu button (mobile) -->
+  <button class="menu-toggle" type="button" aria-label="Abrir o cerrar menu" [attr.aria-expanded]="menuAbierto()" (click)="onHamburgerClick()">
     <span></span>
     <span></span>
     <span></span>
   </button>
 
-  <nav class="nav-links" aria-label="Principal">
-    @for (link of linksVisibles(); track link.path) {
-      <a [routerLink]="link.path" routerLinkActive="active" (click)="cerrarMenu()">
-        {{ link.label }}
-      </a>
-    }
-  </nav>
+  <!-- Nav links (only for storefront) -->
+  @if (!hasSidebar()) {
+    <nav class="nav-links" aria-label="Principal">
+      @for (link of linksVisibles(); track link.path) {
+        <a [routerLink]="link.path" routerLinkActive="active" (click)="cerrarMenu()" style="position: relative; display: inline-flex; align-items: center; gap: 6px;">
+          {{ link.label }}
+          @if (link.path === '/carrito' && cartCount() > 0) {
+            <span class="nav-cart-badge" style="background: var(--accent); color: #171513; font-size: 10px; font-weight: 800; border-radius: 10px; padding: 1px 6px; line-height: 1;">{{ cartCount() }}</span>
+          }
+        </a>
+      }
+    </nav>
+  }
+
+  <!-- Admin topbar right side: page indicator + session -->
+  @if (hasSidebar()) {
+    <div class="topbar-spacer"></div>
+    <div class="topbar-right">
+      <div class="dropdown-wrapper">
+        <button class="topbar-icon-btn" type="button" aria-label="Notificaciones" (click)="toggleNotifications($event)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M18 8A6 6 0 0 0 6 8c0 7-3 9-3 9h18s-3-2-3-9"/><path d="M13.73 21a2 2 0 0 1-3.46 0"/></svg>
+          @if (pendingPedidosCount() > 0) {
+            <span class="notification-badge">{{ pendingPedidosCount() }}</span>
+          }
+        </button>
+
+        @if (showNotifications()) {
+          <div class="topbar-dropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">
+              <h3>Notificaciones</h3>
+              <span class="dropdown-subtitle">{{ pendingPedidosCount() }} pendientes</span>
+            </div>
+            <div class="dropdown-body">
+              @for (pedido of recentPedidos(); track pedido.id_pedido) {
+                <div class="dropdown-item" (click)="irAPedidos()">
+                  <div class="item-icon">📦</div>
+                  <div class="item-content">
+                    <p class="item-text">Pedido <strong>#{{ pedido.id_pedido }}</strong> en estado <strong>{{ pedido.estado }}</strong></p>
+                    <span class="item-time">RUT: {{ pedido.rut_cliente }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <div class="dropdown-empty">
+                  <p>No hay notificaciones.</p>
+                </div>
+              }
+            </div>
+            <div class="dropdown-footer">
+              <a routerLink="/pedidos" (click)="closeDropdowns()">Ver todos los pedidos</a>
+            </div>
+          </div>
+        }
+      </div>
+
+      <div class="dropdown-wrapper">
+        <button class="topbar-icon-btn" type="button" aria-label="Mensajes" (click)="toggleMessages($event)">
+          <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-8.97 5.7a1.94 1.94 0 0 1-2.06 0L2 7"/></svg>
+          @if (recentMensajes().length > 0) {
+            <span class="notification-badge">{{ recentMensajes().length }}</span>
+          }
+        </button>
+
+        @if (showMessages()) {
+          <div class="topbar-dropdown" (click)="$event.stopPropagation()">
+            <div class="dropdown-header">
+              <h3>Mensajes recientes</h3>
+            </div>
+            <div class="dropdown-body">
+              @for (mensaje of recentMensajes(); track mensaje.id_mensaje) {
+                <div class="dropdown-item" (click)="irAMensajes()">
+                  <div class="item-icon">💬</div>
+                  <div class="item-content">
+                    <strong class="item-title">{{ mensaje.asunto }}</strong>
+                    <p class="item-desc">{{ mensaje.contenido }}</p>
+                    <span class="item-time">{{ mensaje.fecha_envio | date:'yyyy-MM-dd' }}</span>
+                  </div>
+                </div>
+              } @empty {
+                <div class="dropdown-empty">
+                  <p>No hay mensajes nuevos.</p>
+                </div>
+              }
+            </div>
+            @if (canAccessMessages()) {
+              <div class="dropdown-footer">
+                <a routerLink="/mensajes" (click)="closeDropdowns()">Ir a mensajería</a>
+              </div>
+            }
+          </div>
+        }
+      </div>
+    </div>
+  }
 
   @if (session()) {
-    <div class="session-box">
-      <strong>{{ session()?.nombre }}</strong>
-      <button type="button" (click)="logout()">Salir</button>
+    <div class="session-box-wrapper">
+      <div class="session-box" [class.is-clickable]="hasSidebar()" (click)="hasSidebar() ? toggleUserMenu($event) : null">
+        @if (hasSidebar()) {
+          <span class="session-name">Forsaken Shop</span>
+          <span class="session-chevron" [class.is-open]="showUserMenu()">
+            <svg width="12" height="12" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><polyline points="6 9 12 15 18 9"/></svg>
+          </span>
+          <span class="session-avatar">{{ session()?.nombre?.charAt(0) ?? 'U' }}</span>
+          <div class="session-details">
+            <strong>{{ session()?.nombre }}</strong>
+            <small>{{ session()?.rol }}</small>
+          </div>
+        } @else {
+          <strong>{{ session()?.nombre }}</strong>
+          <button type="button" (click)="logout()">Salir</button>
+        }
+      </div>
+
+      @if (hasSidebar() && showUserMenu()) {
+        <div class="user-menu-dropdown" (click)="$event.stopPropagation()">
+          <div class="user-menu-header">
+            <strong>{{ session()?.nombre }}</strong>
+            <span>{{ session()?.rol }}</span>
+          </div>
+          <button type="button" class="user-menu-item logout-btn" (click)="logout()">
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/><polyline points="16 17 21 12 16 7"/><line x1="21" y1="12" x2="9" y2="12"/></svg>
+            Cerrar sesión
+          </button>
+        </div>
+      }
     </div>
   } @else {
     <a class="login-link" routerLink="/login" (click)="cerrarMenu()">Iniciar sesion</a>

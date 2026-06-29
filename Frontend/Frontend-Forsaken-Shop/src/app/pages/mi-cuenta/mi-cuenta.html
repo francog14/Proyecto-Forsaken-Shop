@@ -1,0 +1,122 @@
+<section class="page profile-page">
+  <div class="page-heading">
+    <div>
+      <p class="eyebrow">Área de Cliente</p>
+      <h1>Mi Cuenta</h1>
+      <p class="lead">Revisa tu información personal, mensajes de soporte y el historial completo de tus compras en Forsaken Shop.</p>
+    </div>
+  </div>
+
+  @if (error()) {
+    <p class="notice error">{{ error() }}</p>
+  }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
+
+  <div class="profile-layout">
+    <!-- Left column: Profile Card & Simulated User Controls -->
+    <div class="profile-sidebar">
+      <section class="panel profile-card">
+        <div class="profile-header">
+          <span class="profile-avatar">{{ usuarioActual()?.nombre?.charAt(0) ?? 'U' }}</span>
+          <div class="profile-title">
+            <h2>{{ usuarioActual()?.nombre ?? 'Cargando...' }}</h2>
+            <span>{{ authService.session() ? 'Sesión Activa' : 'Cuenta de Simulación' }}</span>
+          </div>
+        </div>
+
+        <div class="profile-details-list">
+          <div class="detail-row">
+            <span class="label">RUN</span>
+            <strong>{{ usuarioActual()?.run ?? '-' }}</strong>
+          </div>
+          <div class="detail-row">
+            <span class="label">Email</span>
+            <strong>{{ usuarioActual()?.email ?? '-' }}</strong>
+          </div>
+          <div class="detail-row">
+            <span class="label">Rol del Sistema</span>
+            <strong class="role-badge">{{ usuarioActual()?.id_rol === 1 ? 'Administrador' : usuarioActual()?.id_rol === 2 ? 'Vendedor' : usuarioActual()?.id_rol === 3 ? 'Bodeguero' : 'Cliente' }}</strong>
+          </div>
+        </div>
+      </section>
+
+      <!-- Simulated User controls (only when not locked to a fixed auth session) -->
+      @if (!authService.session()) {
+        <section class="panel simulator-controls">
+          <div class="section-title">
+            <h2>Simulador de Sesión</h2>
+          </div>
+          <p class="lead" style="margin-top: 0; margin-bottom: 12px; font-size: 12px;">Elige un cliente del listado para simular sus compras e historial en el catálogo:</p>
+          <label>
+            Cambiar Cliente Activo
+            <select [ngModel]="usuarioSeleccionado()" (ngModelChange)="cambiarUsuarioSimulado($event)">
+              @for (usuario of usuarios(); track usuario.id_usuario) {
+                <option [value]="usuario.id_usuario">{{ usuario.nombre }} ({{ usuario.run }})</option>
+              }
+            </select>
+          </label>
+        </section>
+      }
+    </div>
+
+    <!-- Right column: Purchase History Table -->
+    <div class="profile-content">
+      <section class="panel purchase-history">
+        <div class="section-title">
+          <h2>Mis Compras Realizadas</h2>
+          <span>{{ misCompras().length }} registros</span>
+        </div>
+
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Venta</th>
+                <th>Fecha</th>
+                <th>Estado Pedido</th>
+                <th>Prendas</th>
+                <th>Total</th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (venta of misCompras(); track venta.id_venta) {
+                <tr>
+                  <td>
+                    <strong>#{{ venta.id_venta }}</strong>
+                  </td>
+                  <td>{{ venta.fecha | date:'yyyy-MM-dd' }}</td>
+                  <td>
+                    <span class="status-pill" [class.success]="pedidoDeVenta(venta.id_venta)?.estado === 'PAGADO'" [class.warning]="pedidoDeVenta(venta.id_venta)?.estado !== 'PAGADO'">
+                      {{ pedidoDeVenta(venta.id_venta)?.estado ?? 'Sin pedido' }}
+                    </span>
+                  </td>
+                  <td>
+                    <div class="prenda-details-list">
+                      @for (detalle of detallesDeVenta(venta.id_venta); track detalle.id_detalle_venta) {
+                        <span class="prenda-item-detail">
+                          {{ detalle.cantidad }} x {{ nombrePrenda(detalle.id_prenda) }}
+                          <small>({{ detalle.precio_unitario | currency:'CLP':'symbol-narrow':'1.0-0' }})</small>
+                        </span>
+                      } @empty {
+                        <span class="prenda-item-detail empty">Sin desglose de prendas</span>
+                      }
+                    </div>
+                  </td>
+                  <td class="total-col">
+                    <strong>{{ venta.total | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="5" class="empty-state">No se registran compras para este cliente todavía.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+    </div>
+  </div>
+</section>
