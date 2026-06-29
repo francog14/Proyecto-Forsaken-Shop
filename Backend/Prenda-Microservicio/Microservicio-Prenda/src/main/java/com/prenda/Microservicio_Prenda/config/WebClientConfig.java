@@ -10,7 +10,7 @@ public class WebClientConfig {
     @Bean
     public WebClient categoriaWebClient(){
         return WebClient.builder()
-        .baseUrl("http://100.31.202.101/categorias/").build();
+        .baseUrl("http://localhost:7070/").build();
     }
 
 }
