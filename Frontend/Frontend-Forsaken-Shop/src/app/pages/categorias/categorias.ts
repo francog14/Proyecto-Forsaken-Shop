@@ -40,6 +40,13 @@ export class CategoriasComponent implements OnInit {
   }
 
   guardarCategoria() {
+    this.error.set('');
+    this.exito.set('');
+    if (!this.categoria.nombre_categoria || !this.categoria.nombre_categoria.trim()) {
+      this.error.set('El nombre de la categoría no puede estar vacío.');
+      return;
+    }
+
     if (this.categoria.id_categoria) {
       this.categoriaService.actualizar(this.categoria).subscribe({
         next: () => this.finalizar('Categoria actualizada.'),
@@ -48,13 +55,20 @@ export class CategoriasComponent implements OnInit {
       return;
     }
 
-    this.categoriaService.crear({ nombre_categoria: this.categoria.nombre_categoria }).subscribe({
+    this.categoriaService.crear({ nombre_categoria: this.categoria.nombre_categoria.trim() }).subscribe({
       next: () => this.finalizar('Categoria creada.'),
       error: () => this.error.set('No se pudo crear la categoria.'),
     });
   }
 
   guardarRol() {
+    this.error.set('');
+    this.exito.set('');
+    if (!this.rol.nombre_rol || !this.rol.nombre_rol.trim()) {
+      this.error.set('El nombre del rol no puede estar vacío.');
+      return;
+    }
+
     if (this.rol.id_rol) {
       this.rolService.actualizar(this.rol).subscribe({
         next: () => this.finalizar('Rol actualizado.'),
@@ -63,7 +77,7 @@ export class CategoriasComponent implements OnInit {
       return;
     }
 
-    this.rolService.crear({ nombre_rol: this.rol.nombre_rol }).subscribe({
+    this.rolService.crear({ nombre_rol: this.rol.nombre_rol.trim() }).subscribe({
       next: () => this.finalizar('Rol creado.'),
       error: () => this.error.set('No se pudo crear el rol.'),
     });

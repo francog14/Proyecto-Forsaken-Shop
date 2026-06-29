@@ -55,6 +55,36 @@ export class CatalogoComponent implements OnInit {
     this.error.set('');
     this.exito.set('');
 
+    if (!this.formulario.nombre_prenda || !this.formulario.nombre_prenda.trim()) {
+      this.error.set('El nombre de la prenda no puede estar vacío.');
+      return;
+    }
+    if (this.formulario.precio_prenda === undefined || this.formulario.precio_prenda === null || this.formulario.precio_prenda <= 0) {
+      this.error.set('El precio debe ser un valor mayor a 0.');
+      return;
+    }
+    if (!this.formulario.talla || !this.formulario.talla.trim()) {
+      this.error.set('La talla no puede estar vacía.');
+      return;
+    }
+    if (!this.formulario.color || !this.formulario.color.trim()) {
+      this.error.set('El color no puede estar vacío.');
+      return;
+    }
+    if (this.formulario.stock_prenda === undefined || this.formulario.stock_prenda === null || this.formulario.stock_prenda < 0) {
+      this.error.set('El stock debe ser un valor mayor o igual a 0.');
+      return;
+    }
+    if (!this.formulario.id_categoria || this.formulario.id_categoria <= 0) {
+      this.error.set('Debes seleccionar una categoría válida.');
+      return;
+    }
+
+    // Clean values before sending
+    this.formulario.nombre_prenda = this.formulario.nombre_prenda.trim();
+    this.formulario.talla = this.formulario.talla.trim();
+    this.formulario.color = this.formulario.color.trim();
+
     if (this.formulario.id_prenda) {
       this.prendaService.actualizar(this.formulario as Prenda).subscribe({
         next: () => this.finalizarGuardado('Prenda actualizada.'),

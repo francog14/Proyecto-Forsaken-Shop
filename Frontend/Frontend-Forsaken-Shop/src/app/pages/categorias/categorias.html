@@ -24,7 +24,7 @@
         <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
       </form>
 
-      <div class="simple-list">
+      <div class="simple-list scrollable-list">
         @for (item of categorias(); track item.id_categoria) {
           <article>
             <div>
@@ -50,7 +50,7 @@
         <button class="secondary-button" type="button" (click)="limpiar()">Limpiar</button>
       </form>
 
-      <div class="simple-list">
+      <div class="simple-list scrollable-list">
         @for (item of roles(); track item.id_rol) {
           <article>
             <div>

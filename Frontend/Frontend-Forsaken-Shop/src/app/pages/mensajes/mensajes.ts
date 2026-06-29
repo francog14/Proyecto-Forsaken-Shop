@@ -45,6 +45,23 @@ export class MensajesComponent implements OnInit {
     this.error.set('');
     this.exito.set('');
 
+    if (!this.formulario.id_usuario || this.formulario.id_usuario <= 0) {
+      this.error.set('Debes seleccionar un usuario válido.');
+      return;
+    }
+    if (!this.formulario.asunto || !this.formulario.asunto.trim()) {
+      this.error.set('El asunto no puede estar vacío.');
+      return;
+    }
+    if (!this.formulario.contenido || !this.formulario.contenido.trim()) {
+      this.error.set('El contenido del mensaje no puede estar vacío.');
+      return;
+    }
+
+    // Clean values before sending
+    this.formulario.asunto = this.formulario.asunto.trim();
+    this.formulario.contenido = this.formulario.contenido.trim();
+
     if (this.formulario.id_mensaje) {
       this.mensajeService.actualizar(this.formulario as Mensaje).subscribe({
         next: () => this.finalizar('Mensaje actualizado.'),

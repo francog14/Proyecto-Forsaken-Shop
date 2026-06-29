@@ -44,6 +44,28 @@ export class UsuariosComponent implements OnInit {
     this.error.set('');
     this.exito.set('');
 
+    if (!this.formulario.run || !this.formulario.run.trim()) {
+      this.error.set('El RUN no puede estar vacío.');
+      return;
+    }
+    if (!this.formulario.nombre || !this.formulario.nombre.trim()) {
+      this.error.set('El nombre no puede estar vacío.');
+      return;
+    }
+    if (!this.formulario.email || !this.formulario.email.trim()) {
+      this.error.set('El email no puede estar vacío.');
+      return;
+    }
+    if (!this.formulario.id_rol || this.formulario.id_rol <= 0) {
+      this.error.set('Debes seleccionar un rol válido.');
+      return;
+    }
+
+    // Clean values before sending
+    this.formulario.run = this.formulario.run.trim();
+    this.formulario.nombre = this.formulario.nombre.trim();
+    this.formulario.email = this.formulario.email.trim();
+
     if (this.formulario.id_usuario) {
       this.usuarioService.actualizar(this.formulario as Usuario).subscribe({
         next: () => this.finalizar('Usuario actualizado.'),

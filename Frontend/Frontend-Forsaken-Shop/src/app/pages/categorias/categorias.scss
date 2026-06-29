@@ -1,3 +1,9 @@
 .inline-form {
   margin: 18px 0;
 }
+
+.scrollable-list {
+  max-height: 190px;
+  overflow-y: auto;
+  padding-right: 4px;
+}
