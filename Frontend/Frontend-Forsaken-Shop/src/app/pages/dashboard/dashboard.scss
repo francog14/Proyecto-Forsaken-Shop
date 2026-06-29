@@ -1,6 +1,225 @@
+/* ── Dashboard Overrides ─────────────────────── */
+
 .stat-card {
-  min-height: 132px;
+  min-height: 120px;
 }
+
+.role-badge {
+  align-items: center;
+  background: var(--surface-strong);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  color: var(--muted);
+  display: inline-flex;
+  font-size: 12px;
+  font-weight: 700;
+  gap: 6px;
+  padding: 8px 14px;
+  white-space: nowrap;
+}
+
+.panel-menu {
+  background: transparent;
+  border: 0;
+  color: var(--muted);
+  font-size: 16px;
+  letter-spacing: 2px;
+  padding: 4px 8px;
+}
+
+.panel-menu:hover {
+  color: var(--ink);
+}
+
+/* ── Status Chips ─────────────────────── */
+
+.status-chip {
+  border-radius: 6px;
+  display: inline-flex;
+  font-size: 11px;
+  font-weight: 800;
+  letter-spacing: 0.02em;
+  padding: 4px 10px;
+}
+
+.status-chip.completed {
+  background: rgba(143, 185, 150, 0.16);
+  color: var(--color-success);
+}
+
+.status-chip.pending {
+  background: rgba(184, 138, 100, 0.16);
+  color: #E2BE9F;
+}
+
+/* ── Mini bars in stat card ─────────────────────── */
+
+.stat-mini-bars {
+  align-items: center;
+  color: var(--muted);
+  display: flex;
+  font-size: 10px;
+  gap: 6px;
+  margin-top: 4px;
+}
+
+.mini-dot {
+  border-radius: 50%;
+  height: 6px;
+  width: 6px;
+}
+
+.mini-dot.online { background: var(--color-success); }
+.mini-dot.status { background: var(--accent); }
+.mini-dot.pending { background: var(--color-error); }
+
+/* ── Top Products ─────────────────────── */
+
+.top-products-list {
+  display: grid;
+  gap: 12px;
+}
+
+.top-product-card {
+  align-items: center;
+  background: rgba(43, 39, 36, 0.6);
+  border: 1px solid var(--line);
+  border-radius: 10px;
+  display: flex;
+  gap: 14px;
+  padding: 14px;
+  transition: border-color 180ms ease, transform 180ms ease;
+}
+
+.top-product-card:hover {
+  border-color: rgba(184, 138, 100, 0.3);
+  transform: translateX(4px);
+}
+
+.top-product-visual {
+  align-items: center;
+  background:
+    linear-gradient(145deg, rgba(184, 138, 100, 0.22), rgba(36, 36, 36, 0.6)),
+    var(--surface-strong);
+  border: 1px solid rgba(184, 138, 100, 0.18);
+  border-radius: 10px;
+  display: flex;
+  flex-shrink: 0;
+  height: 60px;
+  justify-content: center;
+  width: 60px;
+  overflow: hidden;
+}
+
+.top-product-visual span {
+  color: var(--accent);
+  font-size: 22px;
+  font-weight: 900;
+}
+
+.top-product-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.top-product-info {
+  display: grid;
+  gap: 2px;
+  min-width: 0;
+}
+
+.top-product-info strong {
+  font-size: 14px;
+  font-weight: 700;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  white-space: nowrap;
+}
+
+.top-product-info span {
+  color: var(--muted);
+  font-size: 11px;
+  font-weight: 600;
+}
+
+/* ── Microservices Status Panel ─────────────────────── */
+
+.services-panel {
+  margin-top: 20px;
+}
+
+.services-grid {
+  display: grid;
+  gap: 6px;
+}
+
+.service-row {
+  align-items: center;
+  background: rgba(43, 39, 36, 0.5);
+  border: 1px solid var(--line);
+  border-radius: 8px;
+  display: grid;
+  gap: 12px;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  padding: 10px 14px;
+  transition: border-color 180ms ease;
+}
+
+.service-row:hover {
+  border-color: rgba(184, 138, 100, 0.25);
+}
+
+.service-info {
+  align-items: center;
+  display: flex;
+  gap: 8px;
+}
+
+.service-info strong {
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.service-port {
+  color: var(--muted);
+  font-family: 'Inter', monospace;
+  font-size: 11px;
+  font-weight: 600;
+}
+
+.service-status .chip {
+  font-size: 10px;
+  min-height: 24px;
+  padding: 0 8px;
+}
+
+.service-links {
+  display: flex;
+  gap: 8px;
+}
+
+.service-link {
+  align-items: center;
+  background: rgba(184, 138, 100, 0.08);
+  border: 1px solid rgba(184, 138, 100, 0.18);
+  border-radius: 6px;
+  color: var(--accent);
+  display: inline-flex;
+  font-size: 10px;
+  font-weight: 700;
+  gap: 4px;
+  padding: 4px 8px;
+  text-decoration: none;
+  transition: all 180ms ease;
+}
+
+.service-link:hover {
+  background: rgba(184, 138, 100, 0.16);
+  border-color: var(--accent);
+}
+
+/* ── Metric List (kept for backward compat) ─────────────────────── */
 
 .metric-list {
   display: grid;
@@ -20,4 +239,24 @@
 
 .metric-list strong {
   color: var(--color-primary);
+}
+
+/* ── Responsive ─────────────────────── */
+
+@media (max-width: 900px) {
+  .service-row {
+    grid-template-columns: 1fr;
+    gap: 8px;
+  }
+
+  .service-links {
+    flex-wrap: wrap;
+  }
+}
+
+@media (max-width: 560px) {
+  .top-product-visual {
+    height: 48px;
+    width: 48px;
+  }
 }

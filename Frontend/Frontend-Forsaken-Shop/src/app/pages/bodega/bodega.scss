@@ -1,3 +1,100 @@
+/* ── Bodega / Inventory Styles ─────────────────────── */
+
 .stat-card {
-  min-height: 132px;
+  min-height: 120px;
+}
+
+.heading-actions {
+  display: flex;
+  gap: 10px;
+}
+
+.heading-actions .primary-button {
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.warning-icon {
+  background: rgba(184, 138, 100, 0.12) !important;
+  border-color: rgba(184, 138, 100, 0.2) !important;
+  color: #E2BE9F !important;
+}
+
+.danger-icon {
+  background: rgba(221, 139, 132, 0.12) !important;
+  border-color: rgba(184, 84, 80, 0.2) !important;
+  color: var(--danger) !important;
+}
+
+/* ── Inventory Thumbnail ─────────────────────── */
+
+.inventory-thumb {
+  align-items: center;
+  background:
+    linear-gradient(145deg, rgba(184, 138, 100, 0.18), rgba(36, 36, 36, 0.5));
+  border: 1px solid rgba(184, 138, 100, 0.15);
+  border-radius: 8px;
+  color: var(--accent);
+  display: inline-flex;
+  font-size: 16px;
+  font-weight: 900;
+  height: 38px;
+  justify-content: center;
+  width: 38px;
+  overflow: hidden;
+}
+
+.inventory-thumb-img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.sku-code {
+  color: var(--muted);
+  font-family: 'Inter', monospace;
+  font-size: 12px;
+  font-weight: 600;
+}
+
+/* ── Stock Indicators ─────────────────────── */
+
+.stock-low {
+  color: #E2BE9F !important;
+}
+
+.stock-zero {
+  color: var(--danger) !important;
+}
+
+.stock-indicator {
+  align-items: center;
+  display: inline-flex;
+  justify-content: center;
+}
+
+.stock-indicator.ok {
+  color: var(--color-success);
+}
+
+.stock-indicator.warning {
+  color: #E2BE9F;
+}
+
+.stock-indicator.danger {
+  color: var(--danger);
+}
+
+/* ── Movements Panel ─────────────────────── */
+
+.movements-panel {
+  margin-top: 20px;
+}
+
+.movements-panel .simple-list article strong {
+  font-size: 13px;
+}
+
+.movements-panel .simple-list article span {
+  font-size: 11px;
 }

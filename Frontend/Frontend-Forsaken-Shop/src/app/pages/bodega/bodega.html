@@ -2,52 +2,152 @@
   <div class="page-heading">
     <div>
       <p class="eyebrow">Bodeguero</p>
-      <h1>Control de inventario</h1>
-      <p class="lead">Revisa stock, detecta prendas criticas y administra el catalogo de bodega.</p>
+      <h1>Panel de Control de Bodega</h1>
+      <p class="lead">Revisa stock, detecta prendas críticas y administra el catálogo de bodega.</p>
     </div>
-    <a class="primary-button" routerLink="/catalogo">Administrar prendas</a>
+    <div class="heading-actions">
+      <a class="primary-button" routerLink="/catalogo">
+        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="12" y1="5" x2="12" y2="19"/><line x1="5" y1="12" x2="19" y2="12"/></svg>
+        Agregar Nueva Prenda
+      </a>
+    </div>
   </div>
 
   @if (error()) {
     <p class="notice error">{{ error() }}</p>
   }
 
+  <!-- Stat Cards -->
   <div class="stats-grid">
     <article class="stat-card">
-      <span>Prendas</span>
+      <div class="stat-header">
+        <span>Prendas</span>
+        <span class="stat-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 16V8a2 2 0 0 0-1-1.73l-7-4a2 2 0 0 0-2 0l-7 4A2 2 0 0 0 3 8v8a2 2 0 0 0 1 1.73l7 4a2 2 0 0 0 2 0l7-4A2 2 0 0 0 21 16z"/></svg>
+        </span>
+      </div>
       <strong>{{ prendas().length }}</strong>
     </article>
     <article class="stat-card">
-      <span>Stock total</span>
+      <div class="stat-header">
+        <span>Stock total</span>
+        <span class="stat-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="7" width="20" height="14" rx="2" ry="2"/><path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16"/></svg>
+        </span>
+      </div>
       <strong>{{ stockTotal() }}</strong>
     </article>
     <article class="stat-card">
-      <span>Bajo stock</span>
+      <div class="stat-header">
+        <span>Bajo stock</span>
+        <span class="stat-icon warning-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/><line x1="12" y1="9" x2="12" y2="13"/><line x1="12" y1="17" x2="12.01" y2="17"/></svg>
+        </span>
+      </div>
       <strong>{{ bajoStock().length }}</strong>
     </article>
     <article class="stat-card">
-      <span>Sin stock</span>
+      <div class="stat-header">
+        <span>Sin stock</span>
+        <span class="stat-icon danger-icon">
+          <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+        </span>
+      </div>
       <strong>{{ sinStock() }}</strong>
     </article>
   </div>
 
+  <!-- Inventory Table -->
   <section class="panel">
     <div class="section-title">
-      <h2>Prendas criticas</h2>
+      <h2>Lista de Prendas de Inventario</h2>
       <a class="text-link" routerLink="/catalogo">Editar stock</a>
     </div>
 
+    <div class="table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Imagen</th>
+            <th>Nombre</th>
+            <th>SKU</th>
+            <th>Categoría</th>
+            <th>Tamaño</th>
+            <th>Color</th>
+            <th>Stock Actual</th>
+            <th>Stock Mínimo</th>
+            <th>Estado</th>
+          </tr>
+        </thead>
+        <tbody>
+          @for (prenda of prendas(); track prenda.id_prenda) {
+            <tr>
+              <td>
+                <span class="inventory-thumb">
+                  @if (obtenerImagenPrenda(prenda.nombre_prenda); as imgUrl) {
+                    <img [src]="imgUrl" [alt]="prenda.nombre_prenda" class="inventory-thumb-img" />
+                  } @else {
+                    {{ prenda.nombre_prenda.charAt(0) }}
+                  }
+                </span>
+              </td>
+              <td>
+                <strong>{{ prenda.nombre_prenda }}</strong>
+              </td>
+              <td>
+                <span class="sku-code">{{ 700000 + prenda.id_prenda }}</span>
+              </td>
+              <td>{{ nombreCategoria(prenda.id_categoria) }}</td>
+              <td>{{ prenda.talla }}</td>
+              <td>{{ prenda.color }}</td>
+              <td>
+                <strong [class.stock-low]="prenda.stock_prenda <= 5" [class.stock-zero]="prenda.stock_prenda === 0">{{ prenda.stock_prenda }}</strong>
+              </td>
+              <td>5</td>
+              <td>
+                @if (prenda.stock_prenda === 0) {
+                  <span class="stock-indicator danger">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="15" y1="9" x2="9" y2="15"/><line x1="9" y1="9" x2="15" y2="15"/></svg>
+                  </span>
+                } @else if (prenda.stock_prenda <= 5) {
+                  <span class="stock-indicator warning">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="m21.73 18-8-14a2 2 0 0 0-3.48 0l-8 14A2 2 0 0 0 4 21h16a2 2 0 0 0 1.73-3Z"/></svg>
+                  </span>
+                } @else {
+                  <span class="stock-indicator ok">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><polyline points="20 6 9 17 4 12"/></svg>
+                  </span>
+                }
+              </td>
+            </tr>
+          } @empty {
+            <tr>
+              <td colspan="9" class="empty-state">No hay prendas registradas en inventario.</td>
+            </tr>
+          }
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <!-- Recent Inventory Movements -->
+  <section class="panel movements-panel">
+    <div class="section-title">
+      <h2>Movimientos de Inventario Recientes</h2>
+    </div>
     <div class="simple-list">
-      @for (prenda of bajoStock(); track prenda.id_prenda) {
+      @for (prenda of ultimasPrendas(); track prenda.id_prenda) {
         <article>
           <div>
             <strong>{{ prenda.nombre_prenda }}</strong>
-            <span>{{ nombreCategoria(prenda.id_categoria) }} - {{ prenda.talla }} - {{ prenda.color }}</span>
+            <span>{{ nombreCategoria(prenda.id_categoria) }} · {{ prenda.talla }} · {{ prenda.color }}</span>
           </div>
-          <strong>Stock {{ prenda.stock_prenda }}</strong>
+          <span class="chip" [class.warning]="prenda.stock_prenda <= 5" [class.success]="prenda.stock_prenda > 5">
+            Stock {{ prenda.stock_prenda }}
+          </span>
         </article>
       } @empty {
-        <p class="empty-state">No hay prendas con bajo stock.</p>
+        <p class="empty-state">Sin movimientos recientes.</p>
       }
     </div>
   </section>

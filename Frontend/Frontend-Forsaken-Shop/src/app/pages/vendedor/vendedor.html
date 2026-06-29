@@ -1,66 +1,188 @@
-<section class="page">
+<section class="page pos-page">
   <div class="page-heading">
     <div>
-      <p class="eyebrow">Vendedor</p>
-      <h1>Gestion de ventas</h1>
-      <p class="lead">Consulta ventas registradas, clientes asociados y el movimiento comercial.</p>
+      <p class="eyebrow">Punto de Venta</p>
+      <h1>Terminal de Ventas</h1>
     </div>
-    <a class="primary-button" routerLink="/ventas">Registrar venta</a>
   </div>
 
   @if (error()) {
     <p class="notice error">{{ error() }}</p>
   }
+  @if (exito()) {
+    <p class="notice success">{{ exito() }}</p>
+  }
 
-  <div class="stats-grid">
-    <article class="stat-card">
-      <span>Ventas</span>
-      <strong>{{ ventas().length }}</strong>
-    </article>
-    <article class="stat-card">
-      <span>Total vendido</span>
-      <strong>{{ totalVendido() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
-    </article>
-    <article class="stat-card">
-      <span>Prendas vendidas</span>
-      <strong>{{ prendasVendidas() }}</strong>
-    </article>
-    <article class="stat-card">
-      <span>Clientes</span>
-      <strong>{{ usuarios().length }}</strong>
-    </article>
-  </div>
-
-  <section class="panel">
-    <div class="section-title">
-      <h2>Ultimas ventas</h2>
-      <a class="text-link" routerLink="/ventas">Ver mantenedor</a>
-    </div>
-    <div class="table-wrap">
-      <table>
-        <thead>
-          <tr>
-            <th>ID</th>
-            <th>Fecha</th>
-            <th>Cliente</th>
-            <th>Total</th>
-          </tr>
-        </thead>
-        <tbody>
-          @for (venta of ventas(); track venta.id_venta) {
-            <tr>
-              <td>{{ venta.id_venta }}</td>
-              <td>{{ venta.fecha | date:'yyyy-MM-dd' }}</td>
-              <td>{{ nombreUsuario(venta.id_usuario) }}</td>
-              <td>{{ venta.total | currency:'CLP':'symbol-narrow':'1.0-0' }}</td>
-            </tr>
+  <div class="pos-layout">
+    <!-- Left: Search + Current Sale Items -->
+    <div class="pos-left">
+      <!-- Product Search -->
+      <section class="panel pos-search-panel">
+        <div class="section-title">
+          <h2>
+            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><line x1="21" y1="21" x2="16.65" y2="16.65"/></svg>
+            Busca y Prod.
+          </h2>
+        </div>
+        <input type="text" placeholder="Buscar producto por nombre..." [(ngModel)]="busquedaProducto" class="pos-search-input">
+        <div class="pos-product-results">
+          @for (prenda of productosFiltrados(); track prenda.id_prenda) {
+            <button type="button" class="pos-product-item" (click)="agregarAlPos(prenda)">
+              <span class="pos-product-thumb">
+                @if (obtenerImagenPrenda(prenda.nombre_prenda); as imgUrl) {
+                  <img [src]="imgUrl" [alt]="prenda.nombre_prenda" class="pos-product-img" />
+                } @else {
+                  {{ prenda.nombre_prenda.charAt(0) }}
+                }
+              </span>
+              <div class="pos-product-detail">
+                <strong>{{ prenda.nombre_prenda }}</strong>
+                <span>{{ prenda.talla }} · {{ prenda.color }} · Stock {{ prenda.stock_prenda }}</span>
+              </div>
+              <span class="pos-product-price">{{ prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</span>
+            </button>
           } @empty {
-            <tr>
-              <td colspan="4" class="empty-state">No hay ventas registradas.</td>
-            </tr>
+            <p class="empty-state">Sin resultados.</p>
           }
-        </tbody>
-      </table>
+        </div>
+      </section>
+
+      <!-- Current Sale Items -->
+      <section class="panel">
+        <div class="section-title">
+          <h2>Artículos de Venta Actual</h2>
+          <span>{{ posItems().length }} items</span>
+        </div>
+        <div class="table-wrap">
+          <table>
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Tamaño</th>
+                <th>Color</th>
+                <th>Precio</th>
+                <th>Cantidad</th>
+                <th>Total</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              @for (item of posItems(); track item.prenda.id_prenda) {
+                <tr>
+                  <td><strong>{{ item.prenda.nombre_prenda }}</strong></td>
+                  <td>{{ item.prenda.talla }}</td>
+                  <td>{{ item.prenda.color }}</td>
+                  <td>{{ item.prenda.precio_prenda | currency:'CLP':'symbol-narrow':'1.0-0' }}</td>
+                  <td>
+                    <input type="number" class="pos-qty-input" min="1" [max]="item.prenda.stock_prenda" [ngModel]="item.cantidad" (ngModelChange)="cambiarCantidadPos(item.prenda.id_prenda, $event)">
+                  </td>
+                  <td><strong>{{ item.prenda.precio_prenda * item.cantidad | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong></td>
+                  <td>
+                    <button type="button" class="pos-remove-btn" (click)="quitarDelPos(item.prenda.id_prenda)">
+                      <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/></svg>
+                    </button>
+                  </td>
+                </tr>
+              } @empty {
+                <tr>
+                  <td colspan="7" class="empty-state">Busca y agrega productos para iniciar la venta.</td>
+                </tr>
+              }
+            </tbody>
+          </table>
+        </div>
+      </section>
+
+      <!-- Pedidos por surtir -->
+      <section class="panel">
+        <div class="section-title">
+          <h2>Pedidos por Surtir</h2>
+        </div>
+        <div class="pedidos-list">
+          @for (pedido of pedidosPorSurtir(); track pedido.id_pedido) {
+            <div class="pedido-item">
+              <span class="pedido-range">{{ pedido.id_venta }} - {{ pedido.id_pedido }}</span>
+              <span class="chip" [class.success]="pedido.estado === 'PAGADO'" [class.warning]="pedido.estado !== 'PAGADO'">
+                {{ pedido.estado }}
+              </span>
+            </div>
+          } @empty {
+            <p class="empty-state">Sin pedidos pendientes.</p>
+          }
+        </div>
+        <a class="text-link" routerLink="/pedidos">Agregar Nuevo Portiti</a>
+      </section>
     </div>
-  </section>
+
+    <!-- Right: Client + Payment Summary -->
+    <div class="pos-right">
+      <!-- Client Data -->
+      <section class="panel">
+        <div class="section-title">
+          <h2>Datos del Cliente</h2>
+        </div>
+        <input type="text" placeholder="Buscar (RUT) Cliente..." [(ngModel)]="busquedaCliente" class="pos-search-input">
+        <div class="client-list">
+          @for (usuario of clientesFiltrados(); track usuario.id_usuario) {
+            <button type="button" class="client-item" [class.selected]="clienteSeleccionado === usuario.id_usuario" (click)="seleccionarCliente(usuario.id_usuario)">
+              <span class="client-avatar">{{ usuario.nombre.charAt(0) }}</span>
+              <div>
+                <strong>{{ usuario.nombre }}</strong>
+                <span>{{ usuario.run }}</span>
+              </div>
+            </button>
+          } @empty {
+            <p class="empty-state">Sin clientes.</p>
+          }
+        </div>
+      </section>
+
+      <!-- Payment Summary -->
+      <section class="panel payment-panel">
+        <h2>Resumen de Pago</h2>
+        <div class="payment-rows">
+          <div class="payment-row">
+            <span>Subtotal</span>
+            <strong>{{ subtotal() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+          <div class="payment-row">
+            <span>IVA</span>
+            <strong>{{ iva() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+          <div class="payment-row payment-total">
+            <span>Total</span>
+            <strong class="total-amount">{{ totalPos() | currency:'CLP':'symbol-narrow':'1.0-0' }}</strong>
+          </div>
+        </div>
+
+        <div class="payment-method">
+          <label class="filter-label">Método de pago</label>
+          <div class="method-buttons">
+            <button type="button" class="method-btn" [class.active]="metodoPago === 'EFECTIVO'" (click)="metodoPago = 'EFECTIVO'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Efectivo
+            </button>
+            <button type="button" class="method-btn" [class.active]="metodoPago === 'TARJETA'" (click)="metodoPago = 'TARJETA'">
+              <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="1" y="4" width="22" height="16" rx="2" ry="2"/><line x1="1" y1="10" x2="23" y2="10"/></svg>
+              Tarjeta
+            </button>
+          </div>
+        </div>
+
+        <div class="payment-actions">
+          <button class="secondary-button" type="button" routerLink="/ventas">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="1 4 1 10 7 10"/><path d="M3.51 15a9 9 0 1 0 2.13-9.36L1 10"/></svg>
+            Continuar Venta
+          </button>
+          <button class="primary-button" type="button" (click)="confirmarVenta()" [disabled]="registrando()">
+            {{ registrando() ? 'Registrando...' : 'Confirmar Venta' }}
+          </button>
+          <button class="secondary-button generate-btn" type="button">
+            <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
+            Generar Comprobante
+          </button>
+        </div>
+      </section>
+    </div>
+  </div>
 </section>
