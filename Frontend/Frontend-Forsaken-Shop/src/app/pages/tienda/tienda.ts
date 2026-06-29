@@ -1,56 +1,28 @@
-import { CurrencyPipe, DatePipe } from '@angular/common';
+import { CurrencyPipe } from '@angular/common';
 import { Component, inject, OnInit, signal } from '@angular/core';
 import { FormsModule } from '@angular/forms';
+import { RouterLink } from '@angular/router';
 import { forkJoin } from 'rxjs';
-import { Categoria, DetalleVenta, Pedido, Prenda, Usuario, Venta } from '../../models/forsaken.models';
-import { CategoriaService } from '../../services/categoria.service';
-import { DetalleVentaService } from '../../services/detalle-venta.service';
-import { AuthService } from '../../services/auth.service';
-import { PedidoService } from '../../services/pedido.service';
+import { Categoria, Prenda } from '../../models/forsaken.models';
 import { PrendaService } from '../../services/prenda.service';
-import { UsuarioService } from '../../services/usuario.service';
-import { VentaService } from '../../services/venta.service';
-
-interface CarritoItem {
-  prenda: Prenda;
-  cantidad: number;
-}
-
-interface ComprobanteItem {
-  nombre: string;
-  cantidad: number;
-  precio: number;
-}
+import { CategoriaService } from '../../services/categoria.service';
+import { CartService } from '../../services/cart.service';
 
 @Component({
   selector: 'app-tienda',
-  imports: [CurrencyPipe, DatePipe, FormsModule],
+  imports: [CurrencyPipe, FormsModule, RouterLink],
   templateUrl: './tienda.html',
   styleUrl: './tienda.scss',
 })
 export class TiendaComponent implements OnInit {
   private readonly prendaService = inject(PrendaService);
   private readonly categoriaService = inject(CategoriaService);
-  private readonly usuarioService = inject(UsuarioService);
-  private readonly ventaService = inject(VentaService);
-  private readonly detalleVentaService = inject(DetalleVentaService);
-  private readonly pedidoService = inject(PedidoService);
-  private readonly authService = inject(AuthService);
+  private readonly cartService = inject(CartService);
 
   readonly prendas = signal<Prenda[]>([]);
   readonly categorias = signal<Categoria[]>([]);
-  readonly usuarios = signal<Usuario[]>([]);
-  readonly ventas = signal<Venta[]>([]);
-  readonly detalles = signal<DetalleVenta[]>([]);
-  readonly pedidos = signal<Pedido[]>([]);
-  readonly carrito = signal<CarritoItem[]>([]);
-  readonly ultimaVenta = signal<Venta | null>(null);
-  readonly comprobante = signal<ComprobanteItem[]>([]);
   readonly error = signal('');
   readonly exito = signal('');
-  readonly comprando = signal(false);
-
-  usuarioSeleccionado = 0;
 
   ngOnInit() {
     this.cargarTienda();
@@ -60,235 +32,91 @@ export class TiendaComponent implements OnInit {
     this.error.set('');
     this.exito.set('');
 
-    this.prendaService.listar().subscribe({
-      next: (prendas) => this.prendas.set(prendas),
-      error: () => this.error.set('No se pudieron cargar las prendas.'),
-    });
-
-    this.categoriaService.listar().subscribe({
-      next: (categorias) => this.categorias.set(categorias),
-      error: () => this.error.set('No se pudieron cargar las categorias.'),
-    });
-
-    this.usuarioService.listar().subscribe({
-      next: (usuarios) => {
-        this.usuarios.set(usuarios);
-        const emailSesion = this.authService.session()?.email;
-        const usuarioSesion = usuarios.find((usuario) => usuario.email === emailSesion);
-        if (usuarioSesion) {
-          this.usuarioSeleccionado = usuarioSesion.id_usuario;
-        } else if (!this.usuarioSeleccionado && usuarios.length) {
-          this.usuarioSeleccionado = usuarios[0].id_usuario;
-        }
+    forkJoin({
+      prendas: this.prendaService.listar(),
+      categorias: this.categoriaService.listar(),
+    }).subscribe({
+      next: ({ prendas, categorias }) => {
+        this.prendas.set(prendas);
+        this.categorias.set(categorias);
       },
-      error: () => this.error.set('No se pudieron cargar los usuarios para comprar.'),
+      error: () => {
+        this.error.set('No se pudo cargar la información de la tienda.');
+      },
     });
-
-    this.ventaService.listar().subscribe({
-      next: (ventas) => this.ventas.set(ventas),
-      error: () => this.error.set('No se pudieron cargar tus compras.'),
-    });
-
-    this.detalleVentaService.listar().subscribe({
-      next: (detalles) => this.detalles.set(detalles),
-      error: () => this.error.set('No se pudieron cargar los detalles de compra.'),
-    });
-
-    this.pedidoService.listar().subscribe({
-      next: (pedidos) => this.pedidos.set(pedidos),
-      error: () => this.error.set('No se pudieron cargar los pedidos.'),
-    });
-  }
-
-  agregar(prenda: Prenda) {
-    if (prenda.stock_prenda <= 0) {
-      this.error.set('Esta prenda no tiene stock disponible.');
-      return;
-    }
-
-    const actual = this.carrito();
-    const existente = actual.find((item) => item.prenda.id_prenda === prenda.id_prenda);
-
-    if (existente) {
-      if (existente.cantidad >= prenda.stock_prenda) {
-        this.error.set('No hay mas stock disponible para esta prenda.');
-        return;
-      }
-
-      this.carrito.set(actual.map((item) =>
-        item.prenda.id_prenda === prenda.id_prenda ? { ...item, cantidad: item.cantidad + 1 } : item
-      ));
-      return;
-    }
-
-    this.carrito.set([...actual, { prenda, cantidad: 1 }]);
-  }
-
-  cambiarCantidad(idPrenda: number, cantidad: number) {
-    const normalizada = Math.max(1, Number(cantidad));
-    this.carrito.set(this.carrito().map((item) => {
-      if (item.prenda.id_prenda !== idPrenda) {
-        return item;
-      }
-
-      return { ...item, cantidad: Math.min(normalizada, item.prenda.stock_prenda) };
-    }));
-  }
-
-  quitar(idPrenda: number) {
-    this.carrito.set(this.carrito().filter((item) => item.prenda.id_prenda !== idPrenda));
-  }
-
-  total() {
-    return this.carrito().reduce((acc, item) => acc + item.prenda.precio_prenda * item.cantidad, 0);
-  }
-
-  stockTotal() {
-    return this.prendas().reduce((acc, prenda) => acc + prenda.stock_prenda, 0);
   }
 
   productosDestacados() {
     return this.prendas()
       .filter((prenda) => prenda.stock_prenda > 0)
-      .slice(0, 3);
-  }
-
-  categoriasDestacadas() {
-    return this.categorias().slice(0, 4);
-  }
-
-  cantidadPorCategoria(idCategoria: number) {
-    return this.prendas().filter((prenda) => prenda.id_categoria === idCategoria).length;
-  }
-
-  estadoPrenda(prenda: Prenda) {
-    if (prenda.stock_prenda <= 0) {
-      return 'agotado';
-    }
-
-    if (prenda.stock_prenda <= 3) {
-      return 'poco-stock';
-    }
-
-    return 'disponible';
-  }
-
-  textoEstadoPrenda(prenda: Prenda) {
-    const estado = this.estadoPrenda(prenda);
-
-    if (estado === 'agotado') {
-      return 'Sin stock';
-    }
-
-    if (estado === 'poco-stock') {
-      return 'Poco stock';
-    }
-
-    return 'Disponible';
-  }
-
-  comprar() {
-    this.error.set('');
-    this.exito.set('');
-
-    if (!this.usuarioSeleccionado) {
-      this.error.set('No hay un usuario disponible para registrar la compra.');
-      return;
-    }
-
-    if (!this.carrito().length) {
-      this.error.set('Agrega al menos una prenda al carrito.');
-      return;
-    }
-
-    this.comprando.set(true);
-    const comprobante = this.carrito().map((item) => ({
-      nombre: item.prenda.nombre_prenda,
-      cantidad: item.cantidad,
-      precio: item.prenda.precio_prenda,
-    }));
-
-    this.ventaService.crear({
-      fecha: new Date().toISOString().slice(0, 10),
-      total: this.total(),
-      id_usuario: Number(this.usuarioSeleccionado),
-    }).subscribe({
-      next: (venta) => {
-        const detalles = this.carrito().map((item) => this.detalleVentaService.crear({
-          id_venta: venta.id_venta,
-          id_prenda: item.prenda.id_prenda,
-          cantidad: item.cantidad,
-          precio_unitario: item.prenda.precio_prenda,
-        }));
-
-        forkJoin(detalles).subscribe({
-          next: () => {
-            this.crearPedidoParaVenta(venta, comprobante);
-          },
-          error: () => {
-            this.error.set('La venta se creo, pero fallo al registrar un detalle.');
-            this.comprando.set(false);
-          },
-        });
-      },
-      error: () => {
-        this.error.set('No se pudo registrar la compra.');
-        this.comprando.set(false);
-      },
-    });
+      .slice(0, 5);
   }
 
   nombreCategoria(id: number) {
-    return this.categorias().find((categoria) => categoria.id_categoria === id)?.nombre_categoria ?? 'Sin categoria';
+    return this.categorias().find((categoria) => categoria.id_categoria === id)?.nombre_categoria ?? 'Sin categoría';
   }
 
-  misCompras() {
-    return this.ventas()
-      .filter((venta) => venta.id_usuario === Number(this.usuarioSeleccionado))
-      .sort((a, b) => b.id_venta - a.id_venta);
+  agregarAlCarrito(prenda: Prenda) {
+    this.cartService.agregar(prenda);
+    if (this.cartService.exito()) {
+      this.exito.set(this.cartService.exito());
+      setTimeout(() => this.exito.set(''), 3000);
+    }
   }
 
-  detallesDeVenta(idVenta: number) {
-    return this.detalles().filter((detalle) => detalle.id_venta === idVenta);
-  }
+  obtenerImagenPrenda(nombre: string): string {
+    const nameLower = nombre.toLowerCase();
+    
+    if (nameLower.includes('dark angel')) {
+      return '/assets/img/03_polera_dark_angel.png';
+    }
+    if (nameLower.includes('oversize shadow')) {
+      return '/assets/img/04_polera_oversize_shadow.png';
+    }
+    if (nameLower.includes('forsaken logo')) {
+      return '/assets/img/02_poleron_forsaken_logo.png';
+    }
+    if (nameLower.includes('flame')) {
+      return '/assets/img/05_poleron_flame.png';
+    }
+    if (nameLower.includes('gorro forsaken')) {
+      return '/assets/img/06_gorro_forsaken.png';
+    }
+    if (nameLower.includes('forsaken classic')) {
+      return '/assets/img/13_polera_forsaken_classic.png';
+    }
+    if (nameLower.includes('eclipse')) {
+      return '/assets/img/14_poleron_eclipse.png';
+    }
+    if (nameLower.includes('oversize graphic')) {
+      return '/assets/img/15_polera_oversize_graphic.png';
+    }
+    if (nameLower.includes('zip darkness')) {
+      return '/assets/img/16_poleron_zip_darkness.png';
+    }
+    if (nameLower.includes('tribal')) {
+      return '/assets/img/17_gorro_tribal.png';
+    }
+    if (nameLower.includes('vintage')) {
+      return '/assets/img/18_polera_vintage.png';
+    }
+    if (nameLower.includes('back print')) {
+      return '/assets/img/19_poleron_back_print.png';
+    }
+    if (nameLower.includes('neutral')) {
+      return '/assets/img/20_polera_neutral.png';
+    }
 
-  nombrePrenda(id: number) {
-    return this.prendas().find((prenda) => prenda.id_prenda === id)?.nombre_prenda ?? `Prenda ${id}`;
-  }
-
-  pedidoDeVenta(idVenta: number) {
-    return this.pedidos().find((pedido) => pedido.id_venta === idVenta);
-  }
-
-  usuarioCompra() {
-    return this.usuarios().find((usuario) => usuario.id_usuario === Number(this.usuarioSeleccionado));
-  }
-
-  private crearPedidoParaVenta(venta: Venta, comprobante: ComprobanteItem[]) {
-    const usuario = this.usuarioCompra();
-    this.pedidoService.crear({
-      id_usuario: venta.id_usuario,
-      id_venta: venta.id_venta,
-      rut_cliente: usuario?.run ?? '',
-      estado: 'PAGADO',
-      fecha_pedido: new Date().toISOString().slice(0, 10),
-    }).subscribe({
-      next: () => {
-        this.ultimaVenta.set(venta);
-        this.comprobante.set(comprobante);
-        this.carrito.set([]);
-        this.exito.set('Compra y pedido registrados correctamente.');
-        this.comprando.set(false);
-        this.cargarTienda();
-      },
-      error: () => {
-        this.ultimaVenta.set(venta);
-        this.comprobante.set(comprobante);
-        this.carrito.set([]);
-        this.error.set('La compra se registro, pero no se pudo crear el pedido.');
-        this.comprando.set(false);
-        this.cargarTienda();
-      },
-    });
+    // Fallbacks
+    if (nameLower.includes('poleron') || nameLower.includes('polerón')) {
+      return '/assets/img/14_poleron_eclipse.png';
+    }
+    if (nameLower.includes('polera')) {
+      return '/assets/img/13_polera_forsaken_classic.png';
+    }
+    if (nameLower.includes('gorro')) {
+      return '/assets/img/06_gorro_forsaken.png';
+    }
+    return '';
   }
 }
