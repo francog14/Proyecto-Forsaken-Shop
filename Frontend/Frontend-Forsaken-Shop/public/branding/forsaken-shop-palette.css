@@ -1,0 +1,20 @@
+:root {
+  --fs-bg: #111412;
+  --fs-surface: #1B1E1C;
+  --fs-surface-2: #242321;
+  --fs-border: #3B3834;
+  --fs-primary: #C99569;
+  --fs-primary-hover: #D8AA7F;
+  --fs-text: #F4EFEA;
+  --fs-text-muted: #B9AEA4;
+  --fs-success: #7FA782;
+  --fs-warning: #C59A56;
+  --fs-danger: #C56E67;
+  --fs-info: #7299A9;
+}
+
+/* Example */
+body {
+  background: var(--fs-bg);
+  color: var(--fs-text);
+}
